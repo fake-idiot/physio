@@ -83,6 +83,8 @@ defmodule PhysioWeb.Router do
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     live "/user_dashboard", UserLive.Dashboard, :dashboard
+    live "/user_profile", UserLive.Profile.Index, :index
+    live "/edit_profile", UserLive.Profile.Edit, :edit
   end
 
   scope "/", PhysioWeb do

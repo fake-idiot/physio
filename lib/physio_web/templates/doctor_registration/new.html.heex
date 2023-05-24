@@ -1,8 +1,7 @@
-
-<div class="min-h-screen flex flex-col items-center justify-center">
-  <div class="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-3xl w-[80%] max-w-md">
-    <img src={Routes.static_path(@conn, "/images/Logo.png")} class="h-24 self-center text-xl sm:text-sm text-gray-800"/>
-    <div class="font-medium self-center text-xl sm:text-3xl text-gray-800">
+<div class="bg-black min-h-screen flex flex-col items-center justify-center">
+  <div class="flex flex-col bg-gradient-to-br from-gray-900 to-black shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-3xl w-[80%] max-w-md">
+    <img src={Routes.static_path(@conn, "/images/Logo.png")} class="h-24 self-center text-xl sm:text-sm text-gray-100"/>
+    <div class="font-medium self-center text-xl sm:text-3xl text-gray-100">
       Hey! Newbie
     </div>
     <%= if @changeset.action do %>
@@ -21,19 +20,19 @@
           <div class="flex flex-row justify-between">
             <div class="relative">
               <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400" >
-                <i class="fas fa-at text-blue-500"></i>
+                <i class="fas fa-at text-teal-500"></i>
               </div>
               <%= text_input up, :first_name, id: "first_name",
-                class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400",
+                class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-teal-400",
                 placeholder: "First Name", required: true
               %>
             </div>
             <div class="relative">
               <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400" >
-                <i class="fas fa-at text-blue-500"></i>
+                <i class="fas fa-at text-teal-500"></i>
               </div>
               <%= text_input up, :last_name, id: "last_name",
-                class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400",
+                class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-teal-400",
                 placeholder: "Last Name", required: true
               %>
             </div>
@@ -44,10 +43,10 @@
         <div class="flex flex-col mb-5">
           <div class="relative mb-5">
             <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400" >
-              <i class="fas fa-at text-blue-500"></i>
+              <i class="fas fa-at text-teal-500"></i>
             </div>
             <%= email_input f, :email, id: "email",
-              class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400",
+              class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-teal-400",
               placeholder: "Email", required: true
             %>
           </div>
@@ -55,11 +54,11 @@
           <div class="relative">
             <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
               <span>
-                <i class="fas fa-lock text-blue-500"></i>
+                <i class="fas fa-lock text-teal-500"></i>
               </span>
             </div>
               <%= password_input f, :password, id: "password",
-                class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400",
+                class: "text-sm placeholder-gray-500 pl-10 pr-4 rounded-2xl border border-gray-400 w-full py-2 focus:outline-none focus:border-teal-400",
                 placeholder: "Password", required: true
               %>
           </div>
@@ -67,7 +66,7 @@
 
         <div class="flex w-full">
           <button type="submit" phx-disable-with="Signing in..."
-            class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-500 hover:bg-blue-600 rounded-2xl py-2 w-full transition duration-150 ease-in">
+            class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-teal-500 hover:bg-teal-600 rounded-2xl py-2 w-full transition duration-150 ease-in">
                 <span class="mr-2 uppercase">Sign Up</span>
                 <span>
                     <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,17 +78,17 @@
       </.form>
     </div>
     <div class="flex flex-col justify-center items-center mt-6">
-      <h1 class=" inline-flex items-center text-gray-700 font-medium text-xs text-center">
+      <h1 class=" inline-flex items-center text-gray-100 font-medium text-xs text-center">
         <span class="ml-2">
           Already have an account?
-          <%= link "Log-In", to: Routes.doctor_session_path(@conn, :new), class: "text-xs ml-2 text-blue-500 font-semibold" %>
+          <%= link "Log-In", to: Routes.doctor_session_path(@conn, :new), class: "text-xs ml-2 text-teal-500 font-semibold" %>
         </span>
       </h1>
-      <p class="inline-flex items-center text-gray-700 font-medium text-xs text-center my-1">Or</p>
-      <h1 class=" inline-flex items-center text-gray-700 font-medium text-xs text-center">
+      <p class="inline-flex items-center text-gray-100 font-medium text-xs text-center my-1">Or</p>
+      <h1 class=" inline-flex items-center text-gray-100 font-medium text-xs text-center">
         <span class="ml-2">
           Sign-up as
-          <%= link "User", to: Routes.user_registration_path(@conn, :new), class: "text-xs ml-2 text-blue-500 font-semibold" %>
+          <%= link "User", to: Routes.user_registration_path(@conn, :new), class: "text-xs ml-2 text-teal-500 font-semibold" %>
         </span>
       </h1>
     </div>

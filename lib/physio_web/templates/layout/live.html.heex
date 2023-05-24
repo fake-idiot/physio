@@ -1,10 +1,22 @@
-<main>
-  <p class="alert alert-info" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="info"><%= live_flash(@flash, :info) %></p>
+<main class="container-fluid">
+  <div class="flex kuch_bhi">
+    <%= if !is_nil(@current_user) do %>
+      <div class="col-lg-1">
+        <%= live_component(PhysioWeb.Components.LeftBar, id: "left_bar", current_user: @current_user) %>
+      </div>
+    <% end %>
+    <div class="col-lg-11">
+      <p class="alert alert-info" role="alert"
+        phx-click="lv:clear-flash"
+        phx-value-key="info"><%= live_flash(@flash, :info) %></p>
 
-  <p class="alert alert-danger" role="alert"
-    phx-click="lv:clear-flash"
-    phx-value-key="error"><%= live_flash(@flash, :error) %></p>
-  <%= @inner_content %>
+      <p class="alert alert-danger" role="alert"
+        phx-click="lv:clear-flash"
+        phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+      <%= if !is_nil(@current_user) do %>
+        <%= live_component(PhysioWeb.Components.Header, id: "header", current_user: @current_user) %>
+      <% end %>
+      <%= @inner_content %>
+    </div>
+  </div>
 </main>

@@ -102,6 +102,13 @@
   animation: 0.2s ease-out 0s normal forwards 1 fade-out-keys;
 }
 
+.kuch_bhi {
+  display: flex; }
+.kuch_bhi .col-lg-1 {
+    width: 4.7%; }
+.kuch_bhi .col-lg-11 {
+    width: 95.3%; }
+
 @keyframes fade-in-scale-keys{
   0% { scale: 0.95; opacity: 0; }
   100% { scale: 1.0; opacity: 1; }

@@ -6,6 +6,11 @@ defmodule Physio.Accounts.UserProfile do
     field :first_name, :string
     field :last_name, :string
     field :profile_img, :string
+    field :permanant_address, :string
+    field :current_address, :string
+    field :phone_number, :string
+    field :gender, :string
+    field :dob, :date
 
     belongs_to :user, Physio.Accounts.User
 
