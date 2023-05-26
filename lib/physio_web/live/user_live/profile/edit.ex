@@ -8,7 +8,6 @@ defmodule PhysioWeb.UserLive.Profile.Edit do
     socket = socket |> assign(current_user: find_current_user(session))
 
     user = socket.assigns.current_user
-    IO.inspect(user.user_profile.profile_img, label: "user.user_profile.dob")
     date = if user.user_profile.dob, do: user.user_profile.dob, else: Date.utc_today()
 
     changeset = Accounts.user_changeset(user)

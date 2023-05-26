@@ -389,6 +389,12 @@ defmodule Physio.Accounts do
     if Doctor.valid_password?(doctor, password), do: doctor
   end
 
+  def list_doctor() do
+    Doctor
+    |> preload(:doctor_profile)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single doctor.
 

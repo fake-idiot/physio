@@ -1,0 +1,42 @@
+<div class="bg-white shadow-md h-screen">
+    <h1 class="text-5xl shadow-md w-full h-16 flex justify-center">Doctors</h1>
+    <div class="p-4">
+        <div class="grid grid-cols-4 gap-3">
+            <%= for doctor <- @doctors do %>
+                <div class="font-sans mt-20 w-full flex flex-row justify-center items-center">
+                    <div class="card w-96 mx-auto bg-white  shadow-xl hover:shadow">
+                        <%= if !is_nil(doctor.doctor_profile.profile_img) do %>
+                            <img class="w-32 mx-auto rounded-full -mt-20 border-8 border-white" src={doctor.doctor_profile.profile_img} alt="doctor.doctor_profile.profile_img">
+                        <% else %>
+                            <img class="w-32 mx-auto rounded-full -mt-20 border-8 border-white" src="https://avatars.githubusercontent.com/u/67946056?v=4" alt="">
+                        <% end %>
+                        <div class="text-center mt-2 text-3xl font-medium"><%= doctor.doctor_profile.first_name %></div>
+                        <div class="text-center mt-2 font-light text-sm"><%= doctor.email %></div>
+                        <div class="text-center font-normal text-lg">
+                            <%= if !is_nil(doctor.doctor_profile.clinic_address) do %>
+                                <%= doctor.doctor_profile.clinic_address %>
+                            <% else %>
+                                Clinic Address
+                            <% end %>
+                        </div>
+                        <div class="px-6 text-center mt-2 font-light text-sm">
+                        <p>
+                            <%= if !is_nil(doctor.doctor_profile.bio) do %>
+                                <%= doctor.doctor_profile.bio %>
+                            <% else %>
+                                Doctor's Bio
+                            <% end %>
+                        </p>
+                        </div>
+                        <hr class="mt-8">
+                        <div phx-click="doc_detail" phx-value-doctor_id={doctor.id} class="flex flex-row justify-center p-4 cursor-pointer bg-teal-500 hover:bg-teal-400 text-white">
+                            <div class="text-center">
+                                <span class="font-bold">Detail</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            <% end %>
+        </div>
+    </div>
+</div>

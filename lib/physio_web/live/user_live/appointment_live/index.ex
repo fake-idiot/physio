@@ -1,11 +1,12 @@
-defmodule PhysioWeb.AppointmentLive.Index do
+defmodule PhysioWeb.UserLive.AppointmentLive.Index do
   use PhysioWeb, :live_view
 
   alias Physio.Appointments
   alias Physio.Appointments.Appointment
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    socket = socket |> assign(current_user: find_current_user(session))
     {:ok, assign(socket, :appointments, list_appointments())}
   end
 

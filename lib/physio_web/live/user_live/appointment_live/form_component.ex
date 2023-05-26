@@ -1,4 +1,4 @@
-defmodule PhysioWeb.AppointmentLive.FormComponent do
+defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
   use PhysioWeb, :live_component
 
   alias Physio.Appointments

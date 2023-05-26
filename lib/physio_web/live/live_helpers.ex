@@ -5,6 +5,7 @@ defmodule PhysioWeb.LiveHelpers do
   alias Phoenix.LiveView.JS
   alias Physio.Accounts
   alias Physio.Accounts.User
+  alias Physio.Accounts.Doctor
   alias PhysioWeb.Router.Helpers, as: Routes
 
   @doc """
@@ -66,6 +67,13 @@ defmodule PhysioWeb.LiveHelpers do
          %User{} = user <- Accounts.get_user_by_session_token(user_token),
          do: user
          |> Physio.Repo.preload(:user_profile)
+  end
+
+  def find_current_doctor(session) do
+    with doctor_token when not is_nil(doctor_token) <- session["doctor_token"],
+         %Doctor{} = doctor <- Accounts.get_doctor_by_session_token(doctor_token),
+         do: doctor
+         |> Physio.Repo.preload(:doctor_profile)
   end
 
   def upload_photos(socket, key) do

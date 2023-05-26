@@ -1,0 +1,53 @@
+<!-- component -->
+<div class="text-gray-900 bg-gray-200">
+    <%= if @live_action in [:new, :edit] do %>
+      <.modal return_to={Routes.user_appointment_index_path(@socket, :index)}>
+        <.live_component
+          module={PhysioWeb.UserLive.AppointmentLive.FormComponent}
+          id={@appointment.id || :new}
+          title={@page_title}
+          action={@live_action}
+          appointment={@appointment}
+          return_to={Routes.user_appointment_index_path(@socket, :index)}
+        />
+      </.modal>
+    <% end %>
+    <div class="p-4 flex justify-between">
+        <h1 class="text-3xl">Listing Appointments</h1>
+        <span class="shadow w-auto p-2 bg-teal-500 text-white rounded"><%= live_patch "New Appointment", to: Routes.user_appointment_index_path(@socket, :new) %></span>
+    </div>
+    <div class="px-3 py-4 flex justify-center">
+        <table class="w-full text-md bg-white shadow-md rounded mb-4">
+            <tbody>
+                <tr class="border-b">
+                    <th class="text-left p-3 px-5">Description</th>
+                    <th class="text-left p-3 px-5">Doctor</th>
+                    <th class="text-left p-3 px-5">Date</th>
+                    <th class="text-left p-3 px-5">Time</th>
+                    <th class="text-left p-3 px-5">Type</th>
+                    <th></th>
+                </tr>
+                <%= for appointment <- @appointments do %>
+                  <tr class="border-b hover:bg-orange-100 bg-gray-100" id={"appointment-#{appointment.id}"}>
+                      <td class="p-3 px-5">
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
+                      </td>
+                      <td class="p-3 px-5">
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
+                      </td>
+                      <td class="p-3 px-5">
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
+                      </td>
+                      <td class="p-3 px-5">
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.time %></h1>
+                      </td>
+                      <td class="p-3 px-5">
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
+                      </td>
+                  </tr>
+                <% end %>
+            </tbody>
+        </table>
+
+    </div>
+</div>

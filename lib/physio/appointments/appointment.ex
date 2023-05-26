@@ -6,6 +6,7 @@ defmodule Physio.Appointments.Appointment do
     field :date, :date
     field :description, :string
     field :time, :time
+    field :type, :string
 
     belongs_to :doctor, Physio.Accounts.Doctor
     belongs_to :user, Physio.Accounts.User
@@ -16,7 +17,29 @@ defmodule Physio.Appointments.Appointment do
   @doc false
   def changeset(appointment, attrs) do
     appointment
-    |> cast(attrs, [:description, :date, :time])
-    |> validate_required([:description, :date, :time])
+    |> cast(attrs, [:description, :date, :time, :type])
+    |> validate_required([:description, :date, :time, :type])
+    |> validate_date_time()
   end
+
+  defp validate_date_time(changeset) do
+    date = get_change(changeset, :date) || get_field(changeset, :date) || Date.utc_today()
+
+    time =
+      get_change(changeset, :time) || get_field(changeset, :time) ||
+        Time.add(Time.utc_now(), 305, :second)
+
+    date_comparison = Date.compare(date, Date.utc_today())
+    time_comparison = Time.compare(time, Time.add(Time.utc_now(), 300, :second))
+
+    validate_date_time(changeset, date_comparison, time_comparison)
+  end
+
+  defp validate_date_time(changeset, :lt, _tm),
+    do: add_error(changeset, :date, "date can't be in past")
+
+  defp validate_date_time(changeset, :eq, :lt),
+    do: add_error(changeset, :time, "time can't be in past")
+
+  defp validate_date_time(changeset, _dt, _tm), do: changeset
 end
