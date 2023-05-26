@@ -5,6 +5,7 @@ defmodule PhysioWeb.LiveHelpers do
   alias Phoenix.LiveView.JS
   alias Physio.Accounts
   alias Physio.Accounts.User
+  alias PhysioWeb.Router.Helpers, as: Routes
 
   @doc """
   Renders a live component inside a modal.
@@ -65,5 +66,18 @@ defmodule PhysioWeb.LiveHelpers do
          %User{} = user <- Accounts.get_user_by_session_token(user_token),
          do: user
          |> Physio.Repo.preload(:user_profile)
+  end
+
+  def upload_photos(socket, key) do
+    file_path = consume_uploaded_entries(socket, key, fn meta, entry ->
+      file = Path.join("priv/static/uploads", filename(entry))
+      File.cp!(meta.path, file)
+     {:postpone, Routes.static_path(socket, "/uploads/#{filename(entry)}")}
+    end)
+  end
+
+  def filename(entry) do
+    ext = MIME.extensions(entry.client_type)
+    "#{entry.uuid}.#{List.first (ext)}"
   end
 end

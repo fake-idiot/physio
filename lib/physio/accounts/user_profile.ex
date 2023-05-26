@@ -20,13 +20,17 @@ defmodule Physio.Accounts.UserProfile do
   @doc false
   def changeset(user_profile, attrs) do
     user_profile
-    |> cast(attrs, [:first_name, :last_name, :profile_img])
+    |> cast(attrs, [:first_name, :last_name, :profile_img, :permanant_address, :current_address, :phone_number, :gender, :dob])
+    |> validate_format(:phone_number, ~r/^(\+\d{1,3}\s?)?(\()?\d{3}(\))?[-.\s]?\d{3}[-.\s]?\d{4}$/, message: "Enter a valid Phone number")
+    |> validate_name()
   end
 
   defp validate_name(changeset) do
     changeset
     |> validate_required([:first_name, :last_name])
-    |> validate_format([:first_name, :last_name], ~r/^[a-zA-Z]+(?:['\s-][a-zA-Z]+)*$/, message: "Enter valid name")
-    |> validate_length([:first_name, :last_name], max: 20)
+    |> validate_format(:first_name, ~r/^[a-zA-Z]+(?:['\s-][a-zA-Z]+)*$/, message: "Enter a valid name")
+    |> validate_format(:last_name, ~r/^[a-zA-Z]+(?:['\s-][a-zA-Z]+)*$/, message: "Enter a valid name")
+    |> validate_length(:first_name, max: 20)
+    |> validate_length(:last_name, max: 20)
   end
 end

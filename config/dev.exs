@@ -58,7 +58,7 @@ config :physio, PhysioWeb.Endpoint,
 config :physio, PhysioWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/physio_web/(live|views)/.*(ex)$",
       ~r"lib/physio_web/templates/.*(eex)$"
