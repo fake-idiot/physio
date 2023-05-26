@@ -7,6 +7,7 @@ defmodule PhysioWeb.UserLive.AppointmentLive.Index do
   @impl true
   def mount(_params, session, socket) do
     socket = socket |> assign(current_user: find_current_user(session))
+    IO.inspect(list_appointments(), label: "list_appointments()")
     {:ok, assign(socket, :appointments, list_appointments())}
   end
 

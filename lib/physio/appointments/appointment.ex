@@ -17,8 +17,8 @@ defmodule Physio.Appointments.Appointment do
   @doc false
   def changeset(appointment, attrs) do
     appointment
-    |> cast(attrs, [:description, :date, :time, :type])
-    |> validate_required([:description, :date, :time, :type])
+    |> cast(attrs, [:description, :date, :time, :type, :doctor_id, :user_id])
+    |> validate_required([:description, :date, :time, :type, :doctor_id, :user_id])
     |> validate_date_time()
   end
 

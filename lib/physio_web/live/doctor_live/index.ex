@@ -10,8 +10,7 @@ defmodule PhysioWeb.DoctorLive.Index do
   end
 
   def handle_event("doc_detail", %{"doctor_id" => doctor_id}, socket) do
-
+    socket = redirect(socket, to: Routes.doctor_show_path(socket, :show, doctor_id))
     {:noreply, socket}
   end
-
 end

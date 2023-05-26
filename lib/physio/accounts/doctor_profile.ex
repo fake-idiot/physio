@@ -9,6 +9,7 @@ defmodule Physio.Accounts.DoctorProfile do
     field :clinic_address, :string
     field :bio, :string
     field :rating, :string
+    field :degrees, {:array, :string}
 
     belongs_to :doctor, Physio.Accounts.Doctor
 
@@ -18,7 +19,7 @@ defmodule Physio.Accounts.DoctorProfile do
   @doc false
   def changeset(doctor_profile, attrs) do
     doctor_profile
-    |> cast(attrs, [:first_name, :last_name, :profile_img, :clinic_address, :bio, :rating])
+    |> cast(attrs, [:first_name, :last_name, :profile_img, :clinic_address, :bio, :rating, :degrees])
     |> validate_required([:first_name, :last_name])
   end
 end

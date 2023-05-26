@@ -89,6 +89,7 @@ defmodule PhysioWeb.Router do
     live "/user_appointments/new", UserLive.AppointmentLive.Index, :new
     live "/user_appointments/:id/show", UserLive.AppointmentLive.Show, :show
     live "/doctors", DoctorLive.Index, :index
+    live "/doctors/:id/show", DoctorLive.Show, :show
   end
 
   scope "/", PhysioWeb do

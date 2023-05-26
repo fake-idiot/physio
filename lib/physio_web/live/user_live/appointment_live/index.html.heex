@@ -8,6 +8,7 @@
           title={@page_title}
           action={@live_action}
           appointment={@appointment}
+          current_user={@current_user}
           return_to={Routes.user_appointment_index_path(@socket, :index)}
         />
       </.modal>
@@ -33,7 +34,7 @@
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
                       </td>
                       <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.doctor.doctor_profile.first_name %> <%= appointment.doctor.doctor_profile.last_name %></h1>
                       </td>
                       <td class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>

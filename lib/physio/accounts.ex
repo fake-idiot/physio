@@ -409,7 +409,7 @@ defmodule Physio.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_doctor!(id), do: Repo.get!(Doctor, id)
+  def get_doctor!(id), do: Doctor |> preload(:doctor_profile) |> Repo.get!(id)
 
   ## Doctor registration
 

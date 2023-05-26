@@ -27,11 +27,25 @@
             <%= time_input f, :time, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
             <%= error_tag(f, :time) %>
           </div>
+          <%= if Map.has_key?(assigns, :type) do %>
+            <div class="form-control">
+              <%= select f, :type, @type, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time", style: @disable %>
+              <%= error_tag(f, :type) %>
+            </div>
+          <% else %>
+            <div class="form-control">
+              <%= select f, :type, ["Physical": "Physical", "Online": "Online"], class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
+              <%= error_tag(f, :type) %>
+            </div>
+          <% end %>
 
           <div class="form-control">
-            <%= select f, :type, ["Physical": "Physical", "Online": "Online"], class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
-            <%= error_tag(f, :type) %>
+            <%= select f, :doctor_id, Enum.map(@doctor_option, fn doctor ->
+              {doctor.name, doctor.id} end), class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Select Doctor", style: @disable %>
+            <%= error_tag(f, :doctor_id) %>
           </div>
+
+          <%= hidden_input f, :user_id, value: @current_user.id %>
 
           <div class="flex w-full">
             <button type="submit" phx_disable_with= "Saving..."

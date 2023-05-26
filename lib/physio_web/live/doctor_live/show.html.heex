@@ -1,0 +1,83 @@
+<div class="container mx-auto">
+    <%= if @appointment_modal? do %>
+      <.modal return_to={Routes.doctor_show_path(@socket, :show, @doctor_id)}>
+        <.live_component
+          module={PhysioWeb.UserLive.AppointmentLive.FormComponent}
+          id={:new}
+          title={@page_title}
+          action={@live_action}
+          appointment={@appointment}
+          current_user={@current_user}
+          doctor_id={@doctor_id}
+          type={@type}
+          return_to={Routes.doctor_show_path(@socket, :show, @doctor_id)}
+        />
+      </.modal>
+    <% end %>
+  <!-- Doctor Profile Card -->
+  <div class="bg-white shadow-md rounded-lg p-8 flex">
+    <!-- Left Side (Doctor Profile Information, Experience, Degrees) -->
+    <div class="w-2/3 pr-8">
+      <!-- Doctor Profile Picture -->
+      <div class="mb-6">
+        <img src="profile-pic.jpg" alt="Doctor Profile Picture" class="w-full rounded-lg">
+      </div>
+      
+      <!-- Doctor Profile Information -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold mb-2"><%= @doctor.doctor_profile.first_name %> <%= @doctor.doctor_profile.first_name %></h2>
+        <p class="text-gray-600">Specialty: Cardiology</p>
+        <p class="text-gray-600">Location: New York</p>
+      </div>
+  
+      <!-- Doctor Experience -->
+      <div class="mb-6">
+        <h3 class="text-xl font-bold mb-2">Experience</h3>
+        <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed suscipit eleifend urna eget fringilla.</p>
+      </div>
+  
+      <!-- Doctor Degrees -->
+      <div class="mb-6">
+        <h3 class="text-xl font-bold mb-2">Degrees</h3>
+        <ul class="list-disc list-inside">
+          <li class="text-gray-600">
+            <div class="flex items-center">
+              <img src="degree1.jpg" alt="Degree 1" class="w-8 h-8 rounded-full mr-2">
+              Bachelor of Medicine, Lorem Ipsum University
+            </div>
+          </li>
+          <li class="text-gray-600">
+            <div class="flex items-center">
+              <img src="degree2.jpg" alt="Degree 2" class="w-8 h-8 rounded-full mr-2">
+              Master of Cardiology, Ipsum Lorem University
+            </div>
+          </li>
+          <li class="text-gray-600">
+            <div class="flex items-center">
+              <img src="degree3.jpg" alt="Degree 3" class="w-8 h-8 rounded-full mr-2">
+              PhD in Medical Science, Ipsum Dolor University
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Right Side (Booking Section) -->
+    <div class="w-1/3">
+      <div class="flex flex-col justify-between h-full">
+        <div class="bg-blue-200 rounded p-4 mb-4">
+          <p class="text-gray-800 font-bold">In-person Appointment</p>
+          <p class="text-gray-600">Session Time: 1 hour</p>
+          <p class="text-gray-600">Fee: $100</p>
+          <button phx-click="physical_appointment" class="bg-blue-500 text-white rounded px-4 py-2 mt-4">Book Now</button>
+        </div>
+        <div class="bg-green-200 rounded p-4">
+          <p class="text-gray-800 font-bold">Online Appointment</p>
+          <p class="text-gray-600">Session Time: 1 hour</p>
+          <p class="text-gray-600">Fee: $80</p>
+          <button phx-click="online_appointment" class="bg-green-500 text-white rounded px-4 py-2 mt-4">Book Now</button>
+        </div>
+    </div>
+</div>
+</div>
+</div>

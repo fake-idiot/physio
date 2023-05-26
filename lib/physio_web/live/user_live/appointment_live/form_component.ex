@@ -1,16 +1,23 @@
 defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
   use PhysioWeb, :live_component
 
+  alias Physio.Accounts
   alias Physio.Appointments
 
   @impl true
   def update(%{appointment: appointment} = assigns, socket) do
     changeset = Appointments.change_appointment(appointment)
+    doctor_option = doctor_options(assigns)
+    disable = if Map.has_key?(assigns, :type), do: "pointer-events: none;"
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(changeset: changeset,
+      doctor_option: doctor_option,
+      disable: disable
+     )
+    }
   end
 
   @impl true
@@ -50,6 +57,17 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  defp doctor_options(assigns) do
+    if Map.has_key?(assigns, :doctor_id) do
+      Accounts.list_doctor()
+      |> Enum.filter(&(&1.id == String.to_integer(assigns.doctor_id)))
+      |> Enum.map(fn doctor -> %{id: doctor.id, name: doctor.doctor_profile.first_name} end)
+    else
+      Accounts.list_doctor()
+      |> Enum.map(fn doctor -> %{id: doctor.id, name: doctor.doctor_profile.first_name} end)
     end
   end
 end

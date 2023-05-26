@@ -18,7 +18,9 @@ defmodule Physio.Appointments do
 
   """
   def list_appointments do
-    Repo.all(Appointment)
+    Appointment
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
   end
 
   @doc """
