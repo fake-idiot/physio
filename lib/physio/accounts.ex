@@ -895,7 +895,6 @@ defmodule Physio.Accounts do
   end
 
   def update_user_with_user_profile(%User{user_profile: %UserProfile{}} = user, attrs \\ %{}) do
-    IO.inspect(user, label: "user")
     user
     |> user_changeset(attrs)
     |> Repo.update()
@@ -903,5 +902,15 @@ defmodule Physio.Accounts do
 
   def user_changeset(%User{} = user, attrs \\ %{}) do
     User.user_update_changeset(user, attrs)
+  end
+
+  def doctor_changeset(%Doctor{} = doctor, attrs \\ %{}) do
+    Doctor.doctor_update_changeset(doctor, attrs)
+  end
+
+  def update_doctor_with_doctor_profile(%Doctor{doctor_profile: %DoctorProfile{}} = doctor, attrs \\ %{}) do
+    doctor
+    |> doctor_changeset(attrs)
+    |> Repo.update()
   end
 end

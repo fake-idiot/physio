@@ -57,6 +57,6 @@ defmodule PhysioWeb.Components.DoctorLeftBar do
 
   @impl true
   def handle_event("profile", _, socket) do
-    {:noreply, push_redirect(socket, to: Routes.user_profile_edit_path(socket, :edit))}
+    {:noreply, push_redirect(socket, to: Routes.doctor_profile_edit_path(socket, :edit))}
   end
 end

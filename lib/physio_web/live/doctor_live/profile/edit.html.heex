@@ -1,0 +1,138 @@
+<div class="p-5">
+  <div class="h-full">
+    <.form let={f} for={@changeset} phx-change="validate" phx-submit="update">
+      <div class="border-b-2 block md:flex">
+
+        <div class="w-full md:w-3/6 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
+          <div class="flex justify-center mb-2">
+            <span class="text-xl font-semibold block">Profile Pic</span>
+          </div>
+          <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col items-center">
+            <div class="flex justify-evenly items-center w-full">
+              <%= if !Enum.empty?(@uploads.photos.entries) do %>
+                <%= for entry <- @uploads.photos.entries do %>
+                  <%= live_img_preview(entry, class: "rounded-full w-36 h-36 items-center border") %>
+                <% end %>
+              <% else %>
+                <%= if @current_doctor.doctor_profile.profile_img do%>
+                    <img class="rounded-full w-36 h-36 items-center border" src={@current_doctor.doctor_profile.profile_img}/>
+                <% else %>
+                  <% IO.inspect("Here In 1ST") %>
+                  <img id="showImage" class="rounded-full w-36 h-36 items-center border" src={Routes.static_path(@socket, "/images/default_user.png")} alt="">
+                <% end %>
+              <% end %>
+              <div class="rounded-full flex justify-around items-center border border-teal-500 bg-gray-50 p-4 shadow-md w-32 h-32" phx-drop-target={@uploads.photos.ref} onclick={"document.getElementById('#{@uploads.photos.ref}').click()"}>
+                <label for="upload" class="flex flex-col items-center cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 fill-white stroke-teal-500" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span class="text-gray-600 font-medium">Upload file</span>
+                </label>
+                <%= live_file_input @uploads.photos, hidden: true%>
+              </div>
+            </div>
+            <p class="mt-12">Add upto <%= @uploads.photos.max_entries %> photo, of max <%= @uploads.photos.max_file_size / 1_000_000 %> MB </p>
+          </div>
+
+          <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col items-center mt-12">
+            <span class="text-xl font-semibold block mb-4">Degrees</span>
+            <div class="flex justify-evenly items-center w-full">
+              <%= if !Enum.empty?(@uploads.images.entries) do %>
+                <%= for entry <- @uploads.images.entries do %>
+                  <%= live_img_preview(entry, class: "rounded-fullw-36 h-36 items-center border") %>
+                <% end %>
+              <% else %>
+                <%= if @current_doctor.doctor_profile.degrees do%>
+                  <%= for degree <- @current_doctor.doctor_profile.degrees do %>
+                    <img class="rounded-fullw-36 h-36 items-center border" src={degree}/>
+                  <% end %>
+                <% else %>
+                  <% IO.inspect("Here In 2nd") %>
+                  <img id="showImage" class="rounded-full w-36 h-36 items-center border" src={Routes.static_path(@socket, "/images/default_user.png")} alt="">
+                <% end %>
+              <% end %>
+              <div class="rounded-full flex justify-around items-center border border-teal-500 bg-gray-50 p-4 shadow-md w-32 h-32" phx-drop-target={@uploads.images.ref} onclick={"document.getElementById('#{@uploads.images.ref}').click()"}>
+                <label for="upload" class="flex flex-col items-center cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 fill-white stroke-teal-500" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span class="text-gray-600 font-medium">Upload file</span>
+                </label>
+                <%= live_file_input @uploads.images, hidden: true%>
+              </div>
+            </div>
+            <p class="mt-12">Add upto <%= @uploads.images.max_entries %> photo, of max <%= @uploads.images.max_file_size / 1_000_000 %> MB </p>
+          </div>
+        </div>
+
+        <div class="w-full md:w-3/6 p-8 bg-white lg:ml-4 shadow-md">
+          <div class="flex justify-center"> 
+            <span class="text-xl font-semibold block my-4">Personal Info</span>
+          </div>
+          <%= inputs_for f, :doctor_profile, fn dp -> %>
+            <div class="form-control">
+              <p><%= gettext("First Name") %></p>
+              <%= text_input dp, :first_name, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "First Name" %>
+              <%= error_tag(dp, :first_name) %>
+            </div>
+
+            <div class="form-control">
+              <p><%= gettext("Last Name") %></p>
+              <%= text_input dp, :last_name, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Last Name" %>
+              <%= error_tag(dp, :last_name) %>
+            </div>
+          <% end %>
+
+          <div class="form-control">
+            <p><%= gettext("Email") %></p>
+            <%= email_input f, :email, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Email"%>
+            <%= error_tag(f, :email) %>
+          </div>
+
+          <%= inputs_for f, :doctor_profile, fn dp -> %>
+            <div class="form-control">
+              <p><%= gettext("Phone Number") %></p>
+              <%= text_input dp, :phone_number, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "900000000" %>
+              <%= error_tag(dp, :phone_number) %>
+            </div>
+
+            <div class="form-control">
+              <p><%= gettext("Bio") %></p>
+              <%= textarea dp, :bio, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Hi My name is #####, I'm professional of ____", rows: "6", maxlength: 250, style: "max-height: 100px; min-height: 100px;" %>
+              <%= error_tag(dp, :bio) %>
+            </div>
+            
+            <div class="form-control">
+              <p><%= gettext("Clinic Address") %></p>
+              <%= text_input dp, :clinic_address, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "House # etc, City etc, State etc" %>
+              <%= error_tag(dp, :clinic_address) %>
+            </div>
+
+            <div class="flex flex-row justify-between">
+              <div class="flex flex-row items-center justify-around">
+                <div class="form-control">
+                  <p><%= gettext("Gender") %></p>
+                  <%= select dp, :gender, ["Male": "Male", "Female": "Female"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
+                  <%= error_tag(dp, :gender) %>
+                </div>
+              </div>
+
+              <div class="flex flex-row items-center justify-around">
+                <div class="form-control">
+                  <p><%= gettext("Experience") %></p>
+                  <%= select dp, :experience, ["1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "10": "10", "More than 10": "More than 10"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
+                  <%= error_tag(dp, :experience) %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <div class="flex justify-center w-full">
+            <div class="group rounded-2xl h-12 w-full bg-teal-500 mt-10 font-bold text-lg text-white relative overflow-hidden">
+              <%= submit gettext("Update"), class: "absolute w-full h-full hover:bg-teal-400 rounded-2xl" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </.form>
+  </div>
+</div>

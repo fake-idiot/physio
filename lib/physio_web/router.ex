@@ -124,6 +124,9 @@ defmodule PhysioWeb.Router do
     put "/doctors/settings", DoctorSettingsController, :update
     get "/doctors/settings/confirm_email/:token", DoctorSettingsController, :confirm_email
 
+    # live "/doctor_profile",DoctorLive.Profile.Index, :index
+    live "/edit_doctor_profile", DoctorLive.Profile.Edit, :edit
+
     live "/doctor_dashboard", DoctorLive.Dashboard, :dashboard
   end
 

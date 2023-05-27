@@ -7,7 +7,7 @@
     <% end %>
     <%= if Map.has_key?(assigns, :current_doctor) and !is_nil(@current_doctor) do %>
       <div class="col-lg-1">
-        <%= live_component(PhysioWeb.Components.DoctorLeftBar, id: "user_left_bar", current_doctor: @current_doctor) %>
+        <%= live_component(PhysioWeb.Components.DoctorLeftBar, id: "doctor_left_bar", current_doctor: @current_doctor) %>
       </div>
     <% end %>
     <div class="col-lg-11">

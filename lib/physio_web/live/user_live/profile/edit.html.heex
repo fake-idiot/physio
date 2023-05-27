@@ -80,16 +80,16 @@
               <%= error_tag(up, :phone_number) %>
             </div>
 
-            <div class="flex flex-row items-center justify-around">
+            <div class="flex flex-row justify-between">
               <div class="form-control">
                 <p><%= gettext("Gender") %></p>
-                <%= select up, :gender, ["Male": "Male", "Female": "Female"], class: "border-1 rounded px-4 py-2 w-full mb-6" %>
+                <%= select up, :gender, ["Male": "Male", "Female": "Female"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
                 <%= error_tag(up, :gender) %>
               </div>
 
               <div class="form-control">
                 <p><%= gettext("Date of Birth") %></p>
-                <%= date_input f, :dob, value: @date, class: "border-1 rounded px-4 py-2 w-full mb-6" %>
+                <%= date_input f, :dob, value: @date, class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
                 <%= error_tag(up, :dob) %>
               </div>
             </div>
