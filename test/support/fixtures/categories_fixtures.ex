@@ -31,4 +31,18 @@ defmodule Physio.CategoriesFixtures do
 
     sub_category
   end
+
+  @doc """
+  Generate a doctor_category.
+  """
+  def doctor_category_fixture(attrs \\ %{}) do
+    {:ok, doctor_category} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> Physio.Categories.create_doctor_category()
+
+    doctor_category
+  end
 end

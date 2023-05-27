@@ -1,0 +1,37 @@
+<div class="bg-white flex flex-col items-center justify-center">
+  <div class="flex flex-col lg:px-10 py-8 rounded-3xl w-[80%] max-w-md">
+    <div class="font-medium self-center text-xl sm:text-3xl text-gray-900 mb-12">
+      <%= @title %>
+    </div>
+      <.form
+        let={cc}
+        for={@category_changeset}
+        id="doctor-category-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
+        <div class="flex flex-col mb-5">
+
+          <div class="form-control">
+            <%= select cc, :category_id, Enum.map(@categories, &{&1.name, &1.id}), class: "border-1 rounded px-4 py-2 w-full mb-6" %>
+            <%= error_tag(cc, :category_id) %>
+          </div>
+
+          <div class="form-control">
+            <%= select cc, :sub_category_id, Enum.map(@sub_categories, &{&1.name, &1.id}), class: "border-1 rounded px-4 py-2 w-full mb-6" %>
+            <%= error_tag(cc, :sub_category_id) %>
+          </div>
+
+          <%= hidden_input cc, :doctor_id, value: @doctor_id %>
+        </div>
+
+          <div class="flex w-full">
+            <button type="submit" phx_disable_with= "Saving..."
+              class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-teal-500 hover:bg-teal-600 rounded-2xl py-2 w-full transition duration-150 ease-in">
+                  <span class="mr-2 uppercase">Submit</span>
+            </button>
+          </div>
+      </.form>
+  </div>
+</div>

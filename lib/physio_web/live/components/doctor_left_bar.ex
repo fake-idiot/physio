@@ -52,7 +52,7 @@ defmodule PhysioWeb.Components.DoctorLeftBar do
 
   @impl true
   def handle_event("appointments", _, socket) do
-    {:noreply, push_redirect(socket, to: Routes.user_appointment_index_path(socket, :index))}
+    {:noreply, push_redirect(socket, to: Routes.doctor_doctor_appointment_path(socket, :appointment))}
   end
 
   @impl true

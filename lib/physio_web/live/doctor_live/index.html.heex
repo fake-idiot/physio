@@ -1,4 +1,4 @@
-<div class="bg-white shadow-md h-screen">
+<div class="bg-white shadow-md min-h-screen">
     <h1 class="text-5xl shadow-md w-full h-16 flex justify-between">Doctors</h1>
     <div class="p-4">
         <div class="grid grid-cols-4 gap-3">
@@ -22,7 +22,12 @@
                         <div class="px-6 text-center mt-2 font-light text-sm">
                         <p>
                             <%= if !is_nil(doctor.doctor_profile.bio) do %>
-                                <%= doctor.doctor_profile.bio %>
+                                <%= if String.length(doctor.doctor_profile.bio) > 80 do %>
+                                    <span><%= elem(String.split_at(doctor.doctor_profile.bio, 80),0) %></span>
+                                    <span id="dots"> ... Reed More</span>
+                                <% else %>
+                                    <p><%= doctor.doctor_profile.bio %></p>
+                                <% end %>
                             <% else %>
                                 Doctor's Bio
                             <% end %>

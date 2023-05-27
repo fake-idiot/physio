@@ -3,6 +3,8 @@ defmodule Physio.Accounts.Doctor do
   import Ecto.Changeset
 
   alias Physio.Accounts.DoctorProfile
+  alias Physio.Categories.Category
+  alias Physio.Categories.DoctorCategory
 
   schema "doctors" do
     field :email, :string
@@ -12,6 +14,8 @@ defmodule Physio.Accounts.Doctor do
 
     has_one :doctor_profile, DoctorProfile
     has_many :appointment, Physio.Appointments.Appointment
+    has_many :doctor_category, DoctorCategory
+    many_to_many :categories, Category, join_through: DoctorCategory, on_delete: :delete_all
 
     timestamps()
   end
@@ -45,6 +49,7 @@ defmodule Physio.Accounts.Doctor do
     doctor
     |> cast(attrs, [:email, :password])
     |> cast_assoc(:doctor_profile, with: &DoctorProfile.changeset/2, required: true)
+    |> cast_assoc(:doctor_category, with: &DoctorCategory.changeset/2, required: true)
     |> validate_update_email()
     |> validate_update_password(opts)
   end

@@ -73,7 +73,7 @@ defmodule PhysioWeb.LiveHelpers do
     with doctor_token when not is_nil(doctor_token) <- session["doctor_token"],
          %Doctor{} = doctor <- Accounts.get_doctor_by_session_token(doctor_token),
          do: doctor
-         |> Physio.Repo.preload(:doctor_profile)
+         |> Physio.Repo.preload([:doctor_profile, :doctor_category])
   end
 
   def upload_photos(socket, key) do

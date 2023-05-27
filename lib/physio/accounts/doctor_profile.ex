@@ -13,6 +13,8 @@ defmodule Physio.Accounts.DoctorProfile do
     field :phone_number, :string
     field :gender, :string
     field :experience, :string
+    field :online_fee, :integer
+    field :physical_fee, :integer
 
     belongs_to :doctor, Physio.Accounts.Doctor
 
@@ -25,6 +27,8 @@ defmodule Physio.Accounts.DoctorProfile do
     |> cast(attrs, [:first_name, :last_name, :profile_img, :clinic_address, :bio, :rating, :degrees, :experience, :gender, :phone_number])
     |> validate_format(:phone_number, ~r/^(\+\d{1,3}\s?)?(\()?\d{3}(\))?[-.\s]?\d{3}[-.\s]?\d{4}$/, message: "Enter a valid Phone number")
     |> validate_length(:bio, max: 250)
+    |> validate_length(:online_fee, max: 4, message: "Should be less than 10,000")
+    |> validate_length(:physical_fee, max: 4, message: "Should be less than 10,000")
     |> validate_name()
   end
 

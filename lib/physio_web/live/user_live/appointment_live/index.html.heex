@@ -1,5 +1,5 @@
 <!-- component -->
-<div class="text-gray-900 bg-gray-200">
+<div class="text-gray-900 bg-white min-h-screen">
     <%= if @live_action in [:new, :edit] do %>
       <.modal return_to={Routes.user_appointment_index_path(@socket, :index)}>
         <.live_component
@@ -49,6 +49,5 @@
                 <% end %>
             </tbody>
         </table>
-
     </div>
 </div>

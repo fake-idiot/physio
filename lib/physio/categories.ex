@@ -117,6 +117,12 @@ defmodule Physio.Categories do
     Repo.all(SubCategory)
   end
 
+  def list_sub_categories_by_category(category_id) do
+    (from sc in SubCategory,
+      where: sc.category_id == ^category_id)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single sub_category.
 
@@ -196,5 +202,112 @@ defmodule Physio.Categories do
   """
   def change_sub_category(%SubCategory{} = sub_category, attrs \\ %{}) do
     SubCategory.changeset(sub_category, attrs)
+  end
+
+  alias Physio.Categories.DoctorCategory
+
+  @doc """
+  Returns the list of doctor_categories.
+
+  ## Examples
+
+      iex> list_doctor_categories()
+      [%DoctorCategory{}, ...]
+
+  """
+  def list_doctor_categories do
+    Repo.all(DoctorCategory)
+  end
+
+  @doc """
+  Gets a single doctor_category.
+
+  Raises `Ecto.NoResultsError` if the Doctor category does not exist.
+
+  ## Examples
+
+      iex> get_doctor_category!(123)
+      %DoctorCategory{}
+
+      iex> get_doctor_category!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_doctor_category!(id), do: Repo.get!(DoctorCategory, id)
+
+  @doc """
+  Creates a doctor_category.
+
+  ## Examples
+
+      iex> create_doctor_category(%{field: value})
+      {:ok, %DoctorCategory{}}
+
+      iex> create_doctor_category(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_doctor_category(attrs \\ %{}) do
+    %DoctorCategory{}
+    |> DoctorCategory.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a doctor_category.
+
+  ## Examples
+
+      iex> update_doctor_category(doctor_category, %{field: new_value})
+      {:ok, %DoctorCategory{}}
+
+      iex> update_doctor_category(doctor_category, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_doctor_category(%DoctorCategory{} = doctor_category, attrs) do
+    doctor_category
+    |> DoctorCategory.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a doctor_category.
+
+  ## Examples
+
+      iex> delete_doctor_category(doctor_category)
+      {:ok, %DoctorCategory{}}
+
+      iex> delete_doctor_category(doctor_category)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_doctor_category(%DoctorCategory{} = doctor_category) do
+    Repo.delete(doctor_category)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking doctor_category changes.
+
+  ## Examples
+
+      iex> change_doctor_category(doctor_category)
+      %Ecto.Changeset{data: %DoctorCategory{}}
+
+  """
+  def change_doctor_category(%DoctorCategory{} = doctor_category, attrs \\ %{}) do
+    DoctorCategory.changeset(doctor_category, attrs)
+  end
+
+  def get_categories_by_doctor_id(doctor_id) do
+    from(
+      dc in DoctorCategory,
+      where: dc.doctor_id == ^doctor_id,
+      join: c in Category, on: dc.category_id == c.id,
+      join: sc in SubCategory, on: dc.sub_category_id == sc.id,
+      select: {dc.id, c.name, sc.name}
+    )
+    |> Repo.all()
   end
 end

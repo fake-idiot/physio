@@ -110,4 +110,56 @@ defmodule Physio.CategoriesTest do
       assert %Ecto.Changeset{} = Categories.change_sub_category(sub_category)
     end
   end
+
+  describe "doctor_categories" do
+    alias Physio.Categories.DoctorCategory
+
+    import Physio.CategoriesFixtures
+
+    @invalid_attrs %{}
+
+    test "list_doctor_categories/0 returns all doctor_categories" do
+      doctor_category = doctor_category_fixture()
+      assert Categories.list_doctor_categories() == [doctor_category]
+    end
+
+    test "get_doctor_category!/1 returns the doctor_category with given id" do
+      doctor_category = doctor_category_fixture()
+      assert Categories.get_doctor_category!(doctor_category.id) == doctor_category
+    end
+
+    test "create_doctor_category/1 with valid data creates a doctor_category" do
+      valid_attrs = %{}
+
+      assert {:ok, %DoctorCategory{} = doctor_category} = Categories.create_doctor_category(valid_attrs)
+    end
+
+    test "create_doctor_category/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Categories.create_doctor_category(@invalid_attrs)
+    end
+
+    test "update_doctor_category/2 with valid data updates the doctor_category" do
+      doctor_category = doctor_category_fixture()
+      update_attrs = %{}
+
+      assert {:ok, %DoctorCategory{} = doctor_category} = Categories.update_doctor_category(doctor_category, update_attrs)
+    end
+
+    test "update_doctor_category/2 with invalid data returns error changeset" do
+      doctor_category = doctor_category_fixture()
+      assert {:error, %Ecto.Changeset{}} = Categories.update_doctor_category(doctor_category, @invalid_attrs)
+      assert doctor_category == Categories.get_doctor_category!(doctor_category.id)
+    end
+
+    test "delete_doctor_category/1 deletes the doctor_category" do
+      doctor_category = doctor_category_fixture()
+      assert {:ok, %DoctorCategory{}} = Categories.delete_doctor_category(doctor_category)
+      assert_raise Ecto.NoResultsError, fn -> Categories.get_doctor_category!(doctor_category.id) end
+    end
+
+    test "change_doctor_category/1 returns a doctor_category changeset" do
+      doctor_category = doctor_category_fixture()
+      assert %Ecto.Changeset{} = Categories.change_doctor_category(doctor_category)
+    end
+  end
 end

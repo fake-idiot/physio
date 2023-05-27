@@ -23,6 +23,35 @@ defmodule Physio.Appointments do
     |> Repo.all()
   end
 
+  def list_appointments_by_user_id(user_id) do
+    (from app in Appointment,
+      where: app.user_id == ^user_id
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
+  def upcoming_appointments_by_doctor_id(doctor_id) do
+    (from a in Appointment,
+      where: a.doctor_id == ^doctor_id,
+      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.utc_now()),
+      order_by: [asc: a.date, asc: a.time],
+      select: a
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
+  def outdated_appointments_by_doctor_id(doctor_id) do
+    (from a in Appointment,
+      where: a.doctor_id == ^doctor_id,
+      where: a.date < ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time < ^Time.utc_now()),
+      order_by: [asc: a.date, asc: a.time],
+      select: a
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
   @doc """
   Gets a single appointment.
 

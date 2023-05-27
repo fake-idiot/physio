@@ -1,13 +1,28 @@
-<div class="p-5">
+<div class="p-5 bg-white min-h-screen ">
+    <%= if @open_category_mpdal? do %>
+      <.modal return_to={Routes.doctor_profile_edit_path(@socket, :edit)}>
+        <.live_component
+          module={PhysioWeb.DoctorLive.Profile.Category}
+          id={@doctor_category.id || :new}
+          title={@page_title}
+          action={@live_action}
+          doctor_category={@doctor_category}
+          current_doctor={@current_doctor}
+          doctor_id={@doctor_id}
+          return_to={Routes.doctor_profile_edit_path(@socket, :edit)}
+        />
+      </.modal>
+    <% end %>
+
   <div class="h-full">
     <.form let={f} for={@changeset} phx-change="validate" phx-submit="update">
       <div class="border-b-2 block md:flex">
 
         <div class="w-full md:w-3/6 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
-          <div class="flex justify-center mb-2">
-            <span class="text-xl font-semibold block">Profile Pic</span>
-          </div>
           <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col items-center">
+            <div class="flex justify-center">
+              <span class="text-xl font-semibold block">Profile Pic</span>
+            </div>
             <div class="flex justify-evenly items-center w-full">
               <%= if !Enum.empty?(@uploads.photos.entries) do %>
                 <%= for entry <- @uploads.photos.entries do %>
@@ -34,8 +49,10 @@
             <p class="mt-12">Add upto <%= @uploads.photos.max_entries %> photo, of max <%= @uploads.photos.max_file_size / 1_000_000 %> MB </p>
           </div>
 
-          <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col items-center mt-12">
-            <span class="text-xl font-semibold block mb-4">Degrees</span>
+          <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col items-center mt-6">
+            <div class="flex justify-center">
+              <span class="text-xl font-semibold block mb-4">Degrees</span>
+            </div>
             <div class="flex justify-evenly items-center w-full">
               <%= if !Enum.empty?(@uploads.images.entries) do %>
                 <%= for entry <- @uploads.images.entries do %>
@@ -63,23 +80,46 @@
             </div>
             <p class="mt-12">Add upto <%= @uploads.images.max_entries %> photo, of max <%= @uploads.images.max_file_size / 1_000_000 %> MB </p>
           </div>
+          <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col mt-6">
+            <div class="flex justify-center">
+              <span class="text-xl font-semibold block mb-4">Fee</span>
+            </div>
+            <%= inputs_for f, :doctor_profile, fn dp -> %>
+              <div class="flex flex-row justify-between">
+                <div class="form-control">
+                  <p><%= gettext("Online Consultation Fee") %></p>
+                  <%= number_input dp, :online_fee, class: "border-1 rounded px-4 py-2 w-72 mb-6", placeholder: "fee will consider in PKR" %>
+                  <%= error_tag(dp, :online_fee) %>
+                </div>
+
+                <div class="form-control">
+                  <p><%= gettext("In Person Consultation Fee") %></p>
+                  <%= number_input dp, :physical_fee, class: "border-1 rounded px-4 py-2 w-72 mb-6", placeholder: "fee will consider in PKR" %>
+                  <%= error_tag(dp, :physical_fee) %>
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
 
-        <div class="w-full md:w-3/6 p-8 bg-white lg:ml-4 shadow-md">
+        <div class="w-full md:w-3/6 p-8 bg-white lg:ml-4 shadow-md flex flex-col justify-evenly">
           <div class="flex justify-center"> 
             <span class="text-xl font-semibold block my-4">Personal Info</span>
           </div>
           <%= inputs_for f, :doctor_profile, fn dp -> %>
-            <div class="form-control">
-              <p><%= gettext("First Name") %></p>
-              <%= text_input dp, :first_name, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "First Name" %>
-              <%= error_tag(dp, :first_name) %>
-            </div>
 
-            <div class="form-control">
-              <p><%= gettext("Last Name") %></p>
-              <%= text_input dp, :last_name, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Last Name" %>
-              <%= error_tag(dp, :last_name) %>
+            <div class="flex flex-row justify-between">
+              <div class="form-control">
+                <p><%= gettext("First Name") %></p>
+                <%= text_input dp, :first_name, class: "border-1 rounded px-4 py-2 w-80 mb-6", placeholder: "First Name" %>
+                <%= error_tag(dp, :first_name) %>
+              </div>
+
+              <div class="form-control">
+                <p><%= gettext("Last Name") %></p>
+                <%= text_input dp, :last_name, class: "border-1 rounded px-4 py-2 w-80 mb-6", placeholder: "Last Name" %>
+                <%= error_tag(dp, :last_name) %>
+              </div>
             </div>
           <% end %>
 
@@ -109,20 +149,16 @@
             </div>
 
             <div class="flex flex-row justify-between">
-              <div class="flex flex-row items-center justify-around">
-                <div class="form-control">
-                  <p><%= gettext("Gender") %></p>
-                  <%= select dp, :gender, ["Male": "Male", "Female": "Female"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
-                  <%= error_tag(dp, :gender) %>
-                </div>
+              <div class="form-control">
+                <p><%= gettext("Gender") %></p>
+                <%= select dp, :gender, ["Male": "Male", "Female": "Female"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
+                <%= error_tag(dp, :gender) %>
               </div>
-
-              <div class="flex flex-row items-center justify-around">
-                <div class="form-control">
-                  <p><%= gettext("Experience") %></p>
-                  <%= select dp, :experience, ["1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "10": "10", "More than 10": "More than 10"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
-                  <%= error_tag(dp, :experience) %>
-                </div>
+              
+              <div class="form-control">
+                <p><%= gettext("Experience") %></p>
+                <%= select dp, :experience, ["1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "10": "10", "More than 10": "More than 10"], class: "border-1 rounded px-4 py-2 w-80 mb-6" %>
+                <%= error_tag(dp, :experience) %>
               </div>
             </div>
           <% end %>
@@ -134,5 +170,34 @@
         </div>
       </div>
     </.form>
+
+    <div>
+      
+      <div class="p-4 flex justify-between">
+          <h1 class="text-3xl">Listing Categories</h1>
+          <button phx-click="open_category" class="shadow w-auto p-2 bg-teal-500 text-white rounded">Add Category</button>
+      </div>
+      <div class="px-3 py-4 flex justify-center">
+          <table class="w-full text-md bg-white shadow-md rounded mb-4">
+              <tbody>
+                  <tr class="border-b">
+                      <th class="text-left p-3 px-5">Category</th>
+                      <th class="text-left p-3 px-5">Sub Category</th>
+                      <th></th>
+                  </tr>
+                  <%= for {doctor_category_id, category_name, sub_category_name} <- @doctor_categories do %>
+                    <tr class="border-b hover:bg-teal-100 bg-gray-100" id={"appointment-#{doctor_category_id}"}>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= category_name %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= sub_category_name %></h1>
+                        </td>
+                    </tr>
+                  <% end %>
+              </tbody>
+          </table>
+      </div>
+    </div>
   </div>
 </div>

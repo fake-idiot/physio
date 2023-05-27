@@ -1,6 +1,8 @@
 defmodule PhysioWeb.DoctorLive.Profile.Edit do
   use PhysioWeb, :live_view
 
+  alias Physio.Categories.DoctorCategory
+  alias Physio.Categories
   alias Physio.Accounts
 
   @impl Phoenix.LiveView
@@ -8,12 +10,14 @@ defmodule PhysioWeb.DoctorLive.Profile.Edit do
     socket = socket |> assign(current_doctor: find_current_doctor(session))
 
     doctor = socket.assigns.current_doctor
-
+    doctor_categories = Categories.get_categories_by_doctor_id(doctor.id)
     changeset = Accounts.doctor_changeset(doctor)
 
     {:ok, socket
           |> assign(
-            changeset: changeset
+            changeset: changeset,
+            open_category_mpdal?: false,
+            doctor_categories: doctor_categories
           )
           |> allow_upload(
             :photos,
@@ -28,6 +32,26 @@ defmodule PhysioWeb.DoctorLive.Profile.Edit do
             max_file_size: 10_000_000
           )
     }
+  end
+
+  def handle_params(_params, uri, socket) do
+    {:noreply, socket |> assign(open_category_mpdal?: false)}
+  end
+
+  @impl true
+  def handle_event("open_category", _payload, socket) do
+    socket =
+    socket
+    |> assign(
+      open_category_mpdal?: true,
+      page_title: "Add New Category",
+      doctor_category: %DoctorCategory{},
+      live_action: :new,
+      current_doctor: socket.assigns.current_doctor,
+      doctor_id: socket.assigns.current_doctor.id
+    )
+    IO.inspect(socket, label: "socket")
+    {:noreply, socket}
   end
 
   @impl true
@@ -50,7 +74,7 @@ defmodule PhysioWeb.DoctorLive.Profile.Edit do
       end
 
     doctor_params =
-      if !is_nil(upload_photos(socket, :images)) do
+      if !Enum.empty?(upload_photos(socket, :images)) do
         Map.put(doctor_params, "doctor_profile", Map.put(doctor_params["doctor_profile"], "degrees", upload_photos(socket, :images)))
       else
         doctor_params
