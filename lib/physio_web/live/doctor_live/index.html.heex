@@ -9,10 +9,10 @@
                 class="flex flex-col md:flex-row items-center ml-32"
             >
                 <div class="flex">
-                    <%= text_input f, :search, class: "w-full md:w-80 px-3 h-10 rounded-l border-2 border-teal-500 focus:outline-none focus:border-teal-500", placeholder: "Search for the Doctor you like" %>
+                    <%= text_input f, :search, class: "w-full md:w-80 px-3 h-10 rounded-l border-2 border-teal-500", placeholder: "Search for the Doctor you like" %>
                     <button type="submit" class="bg-teal-500 text-white rounded-r px-2 md:px-3 py-0 md:py-1">Search</button>
                 </div>
-                <%= select f, :items, ["By Doctor": "By Doctor", "By Category": "By Category", "By Sub_Category": "By Sub Category"], selected: @filters.search["items"], class: "ml-4 w-full h-10 border-2 border-teal-500 focus:outline-none focus:border-teal-500 text-teal-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider", phx_change: "search" %>
+                <%= select f, :items, ["By Doctor": "By Doctor", "By Category": "By Category", "By Sub_Category": "By Sub Category"], selected: @filters.search["items"], class: "ml-4 w-full h-10 border-2 border-teal-500 text-teal-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider", phx_change: "search" %>
             </.form>
         </div>
         <div class="grid grid-cols-4 gap-3">
@@ -24,7 +24,7 @@
                         <% else %>
                             <img class="w-32 mx-auto rounded-full -mt-20 border-8 border-white" src="https://avatars.githubusercontent.com/u/67946056?v=4" alt="">
                         <% end %>
-                        <div class="text-center mt-2 text-3xl font-medium"><%= doctor.doctor_profile.first_name %></div>
+                        <div class="text-center mt-2 text-3xl font-medium"><%= doctor.doctor_profile.first_name %> <%= doctor.doctor_profile.last_name %></div>
                         <div class="text-center mt-2 font-light text-sm"><%= doctor.email %></div>
                         <div class="text-center font-normal text-lg">
                             <%= if !is_nil(doctor.doctor_profile.clinic_address) do %>
