@@ -1,12 +1,12 @@
 <div class="bg-white shadow-md min-h-screen">
     <div class="p-4">
-        <div class="flex shadow-md w-full h-16">
-            <h1 class="text-5xl ">Doctors</h1>
+        <div class="flex shadow-md w-full h-16 items-center">
+            <h1 class="text-4xl ml-4">Doctors</h1>
             <.form
                 let={f}
                 for={:search}
                 phx-change="search"
-                class="flex flex-col md:flex-row items-center ml-32"
+                class="flex flex-col md:flex-row items-center ml-[25%]"
             >
                 <div class="flex">
                     <%= text_input f, :search, class: "w-full md:w-80 px-3 h-10 rounded-l border-2 border-teal-500", placeholder: "Search for the Doctor you like" %>
