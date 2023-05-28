@@ -1,6 +1,20 @@
 <div class="bg-white shadow-md min-h-screen">
     <div class="p-4">
-        <h1 class="text-5xl shadow-md w-full h-16 flex justify-between">Doctors</h1>
+        <div class="flex shadow-md w-full h-16">
+            <h1 class="text-5xl ">Doctors</h1>
+            <.form
+                let={f}
+                for={:search}
+                phx-change="search"
+                class="flex flex-col md:flex-row items-center ml-32"
+            >
+                <div class="flex">
+                    <%= text_input f, :search, class: "w-full md:w-80 px-3 h-10 rounded-l border-2 border-teal-500 focus:outline-none focus:border-teal-500", placeholder: "Search for the Doctor you like" %>
+                    <button type="submit" class="bg-teal-500 text-white rounded-r px-2 md:px-3 py-0 md:py-1">Search</button>
+                </div>
+                <%= select f, :items, ["By Doctor": "By Doctor", "By Category": "By Category", "By Sub_Category": "By Sub Category"], selected: @filters.search["items"], class: "ml-4 w-full h-10 border-2 border-teal-500 focus:outline-none focus:border-teal-500 text-teal-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider", phx_change: "search" %>
+            </.form>
+        </div>
         <div class="grid grid-cols-4 gap-3">
             <%= for doctor <- @doctors do %>
                 <div class="font-sans mt-20 w-full flex flex-row justify-center items-center">

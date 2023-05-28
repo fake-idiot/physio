@@ -7,6 +7,7 @@ defmodule Physio.Accounts do
   alias Physio.Repo
 
   alias Physio.Accounts.{User, UserToken, UserNotifier}
+  alias Physio.Categories.{DoctorCategory, Category, SubCategory}
 
   ## Database getters
 
@@ -393,6 +394,50 @@ defmodule Physio.Accounts do
     Doctor
     |> preload(:doctor_profile)
     |> Repo.all()
+  end
+
+  def list_doctor_by_filters(filter \\ %{}) do
+    Doctor
+    |> preload(:doctor_profile)
+    |> apply_doctor_filter(filter)
+    |> Repo.all()
+  end
+
+  defp apply_doctor_filter(query, filter) do
+    search = filter.search
+    search_word = "%#{String.trim(search["search"])}%"
+
+    cond do
+      search["items"] == "By Category" ->
+        from(
+          q in query,
+          join: dc in assoc(q, :doctor_category),
+          join: c in assoc(dc, :category),
+          where:
+            ilike(c.name, ^search_word),
+          distinct: q.id
+        )
+
+      search["items"] == "By Sub_Category" ->
+        from(
+          q in query,
+          join: dc in assoc(q, :doctor_category),
+          join: c in assoc(dc, :category),
+          join: sc in assoc(dc, :sub_category),
+          where:
+            ilike(sc.name, ^search_word),
+          distinct: q.id
+        )
+
+      true ->
+        from(
+          q in query,
+          join: dp in assoc(q, :doctor_profile),
+          where:
+            ilike(dp.first_name, ^search_word) or
+            ilike(dp.last_name, ^search_word)
+        )
+    end
   end
 
   @doc """
