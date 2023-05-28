@@ -7,7 +7,14 @@ defmodule PhysioWeb.UserLive.AppointmentLive.Index do
   @impl true
   def mount(_params, session, socket) do
     socket = socket |> assign(current_user: find_current_user(session))
-    {:ok, assign(socket, :appointments, list_appointments(socket.assigns.current_user.id))}
+
+    {:ok,
+      socket
+      |> assign(
+        upcoming_appointments: Appointments.upcoming_appointments_by_user_id(socket.assigns.current_user.id),
+        outdated_appointments: Appointments.outdated_appointments_by_user_id(socket.assigns.current_user.id)
+      )
+    }
   end
 
   @impl true
