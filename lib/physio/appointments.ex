@@ -23,6 +23,26 @@ defmodule Physio.Appointments do
     |> Repo.all()
   end
 
+  def listing_appointments_by_user_id(user_id) do
+    (from a in Appointment,
+      where: a.user_id == ^user_id,
+      order_by: [asc: a.date, asc: a.time],
+      select: a
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
+  def list_appointments_by_doctor_id(doctor_id) do
+    (from a in Appointment,
+      where: a.doctor_id == ^doctor_id,
+      order_by: [asc: a.date, asc: a.time],
+      select: a
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
   def upcoming_appointments_by_user_id(user_id) do
     (from a in Appointment,
       where: a.user_id == ^user_id,

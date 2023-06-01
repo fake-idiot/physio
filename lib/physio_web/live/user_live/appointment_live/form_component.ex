@@ -4,6 +4,29 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
   alias Physio.Accounts
   alias Physio.Appointments
 
+  @time_list [
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+  ]
+
   @impl true
   def update(%{appointment: appointment} = assigns, socket) do
     changeset = Appointments.change_appointment(appointment)
@@ -16,7 +39,8 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
      |> assign(changeset: changeset,
       doctor_option: doctor_option,
       disable: disable,
-      already_taken: false
+      already_taken: false,
+      time_list: @time_list
      )
     }
   end
@@ -110,6 +134,5 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
     Enum.any?(appointments, fn appointment ->
       appointment.time == input_time
     end)
-    |> IO.inspect(label: "Working2")
   end
 end

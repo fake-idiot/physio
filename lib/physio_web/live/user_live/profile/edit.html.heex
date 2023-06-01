@@ -1,38 +1,46 @@
-<div class="p-5">
+<div class="bg-white p-5 mt-14 min-h-screen">
   <div class="h-full">
     <.form let={f} for={@changeset} phx-change="validate" phx-submit="update">
       <div class="border-b-2 block md:flex">
 
         <div class="w-full md:w-3/6 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
-          <div class="flex justify-center mb-2">
-            <span class="text-xl font-semibold block">Profile Pic</span>
-          </div>
+          <label class="block text-gray-700 text-lg font-bold mb-2 text-center" for="photo">
+              Profile Photo <span class="text-red-600"> </span>
+          </label>
           <div class="border rounded-md border-teal-700 w-auto h-auto p-8 flex flex-col items-center">
             <div class="flex justify-evenly items-center w-full">
-              <%= if entry = List.first(@uploads.photos.entries) do %>
-                <%= live_img_preview(entry, class: "rounded-full w-48 h-48 items-center border") %>
-              <% else %>
-                <%= if @current_user.user_profile.profile_img do%>
-                  <img class="rounded-full w-48 h-48 items-center border" src={@current_user.user_profile.profile_img}/>
-                <% else %>
-                  <img id="showImage" class="rounded-full w-48 h-48 items-center border" src={Routes.static_path(@socket, "/images/default_user.png")} alt="">
-                <% end %>
-              <% end %>
-              <div class="rounded-full flex justify-around items-center border border-teal-500 bg-gray-50 p-4 shadow-md w-32 h-32" phx-drop-target={@uploads.photos.ref} onclick={"document.getElementById('#{@uploads.photos.ref}').click()"}>
-                <label for="upload" class="flex flex-col items-center cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 fill-white stroke-teal-500" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span class="text-gray-600 font-medium">Upload file</span>
-                </label>
-                <%= live_file_input @uploads.photos, hidden: true%>
+              <div class="text-center">
+                  <%= if entry = List.first(@uploads.photos.entries) do %>
+                    <!-- New Profile Photo Preview -->
+                    <div class="mt-2" x-show="photoPreview">
+                        <%= live_img_preview(entry, class: "block w-40 h-40 rounded-full m-auto shadow") %>
+                    </div>
+                  <% else %>
+                    <%= if @current_user.user_profile.profile_img do%>
+                      <!-- Current Profile Photo -->
+                      <div class="mt-2" x-show="! photoPreview">
+                          <img src={@current_user.user_profile.profile_img} class="w-40 h-40 m-auto rounded-full shadow">
+                      </div>
+                    <% else %>
+                      <!-- Default Profile Photo -->
+                      <div class="mt-2" x-show="! photoPreview">
+                          <img src={Routes.static_path(@socket, "/images/default_user.png")} class="w-40 h-40 m-auto rounded-full shadow">
+                      </div>
+                    <% end %>
+                  <% end %>
+                  <button phx-drop-target={@uploads.photos.ref} onclick={"document.getElementById('#{@uploads.photos.ref}').click()"} type="button" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:text-teal-500 focus:outline-none focus:border-blue-400 focus:shadow-outline-blue active:text-teal-100 active:bg-gray-50 transition ease-in-out duration-150 mt-2 ml-3">
+                      Select New Photo
+                  </button>
+                  <%= live_file_input @uploads.photos, hidden: true%>
               </div>
             </div>
-            <p class="mt-12">Add upto <%= @uploads.photos.max_entries %> photo, of max <%= @uploads.photos.max_file_size / 1_000_000 %> MB </p>
+            <p class="mt-6">Add upto <%= @uploads.photos.max_entries %> photo, of max <%= @uploads.photos.max_file_size / 1_000_000 %> MB </p>
           </div>
 
           <div class="flex justify-center">
-            <span class="text-xl font-semibold block my-4">Address</span>
+            <label class="block text-gray-700 text-lg font-bold text-center my-4">
+                Address <span class="text-red-600"> </span>
+            </label>
           </div>
           <%= inputs_for f, :user_profile, fn up -> %>
             <div class="form-control">
@@ -50,8 +58,10 @@
         </div>
 
         <div class="w-full md:w-3/6 p-8 bg-white lg:ml-4 shadow-md">
-          <div class="flex justify-center"> 
-            <span class="text-xl font-semibold block my-4">Personal Info</span>
+          <div class="flex justify-center">
+            <label class="block text-gray-700 text-lg font-bold text-center my-4">
+                Personal Info <span class="text-red-600"> </span>
+            </label>
           </div>
           <%= inputs_for f, :user_profile, fn up -> %>
             <div class="form-control">

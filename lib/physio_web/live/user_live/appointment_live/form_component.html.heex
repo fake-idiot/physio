@@ -26,7 +26,7 @@
           </div>
 
           <div class="form-control">
-            <%= time_input f, :time, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
+            <%= select f, :time, @time_list, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
             <%= error_tag(f, :time) %>
           </div>
           <%= if Map.has_key?(assigns, :type) do %>

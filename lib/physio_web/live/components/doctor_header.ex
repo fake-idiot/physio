@@ -3,7 +3,7 @@ defmodule PhysioWeb.Components.DoctorHeader do
 
   def render(assigns) do
     ~H"""
-      <div class="flex h-16 bg-gray-900" id="header">
+      <div class="fixed flex h-16 bg-gray-900" id="header">
           <header class="w-full text-gray-100 bg-gray-900 shadow-sm body-font">
               <div class="container flex flex-col flex-wrap justify-end p-1 mx-auto md:flex-row">
                   <div class="inline-flex items-center h-full ml-5 lg:w-2/5 lg:justify-end lg:ml-0">

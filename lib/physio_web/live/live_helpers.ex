@@ -77,7 +77,7 @@ defmodule PhysioWeb.LiveHelpers do
   end
 
   def upload_photos(socket, key) do
-    file_path = consume_uploaded_entries(socket, key, fn meta, entry ->
+    consume_uploaded_entries(socket, key, fn meta, entry ->
       file = Path.join("priv/static/uploads", filename(entry))
       File.cp!(meta.path, file)
      {:postpone, Routes.static_path(socket, "/uploads/#{filename(entry)}")}

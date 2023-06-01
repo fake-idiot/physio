@@ -1,90 +1,92 @@
-<!-- component -->
-<div class="text-gray-900 bg-white min-h-screen">
-    <%= if @live_action in [:new, :edit] do %>
-      <.modal return_to={Routes.user_appointment_index_path(@socket, :index)}>
-        <.live_component
-          module={PhysioWeb.UserLive.AppointmentLive.FormComponent}
-          id={@appointment.id || :new}
-          title={@page_title}
-          action={@live_action}
-          appointment={@appointment}
-          current_user={@current_user}
-          return_to={Routes.user_appointment_index_path(@socket, :index)}
-        />
-      </.modal>
-    <% end %>
-    <div class="p-4 flex justify-between">
-        <h1 class="text-3xl">Upcoming Appointments</h1>
-        <span class="shadow w-auto p-2 bg-teal-500 text-white rounded"><%= live_patch "New Appointment", to: Routes.user_appointment_index_path(@socket, :new) %></span>
-    </div>
-    <div class="px-3 py-4 flex justify-center">
-        <table class="w-full text-md bg-white shadow-md rounded mb-4">
-            <tbody>
-                <tr class="border-b">
-                    <th class="text-left p-3 px-5">Description</th>
-                    <th class="text-left p-3 px-5">Doctor</th>
-                    <th class="text-left p-3 px-5">Date</th>
-                    <th class="text-left p-3 px-5">Time</th>
-                    <th class="text-left p-3 px-5">Type</th>
-                    <th></th>
-                </tr>
-                <%= for appointment <- @upcoming_appointments do %>
-                  <tr class="border-b hover:bg-orange-100 bg-gray-100" id={"appointment-#{appointment.id}"}>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.doctor.doctor_profile.first_name %> <%= appointment.doctor.doctor_profile.last_name %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.time %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
-                      </td>
-                  </tr>
-                <% end %>
-            </tbody>
-        </table>
-    </div>
+<div class="text-gray-900 bg-white mt-14">
 
-    <div class="p-4 flex justify-center">
-        <h1 class="text-3xl">Previous Appointments</h1>
-    </div>
-    <div class="px-3 py-4 flex justify-center">
-        <table class="w-full text-md bg-white shadow-md rounded mb-4">
-            <tbody>
-                <tr class="border-b">
-                    <th class="text-left p-3 px-5">Description</th>
-                    <th class="text-left p-3 px-5">Doctor</th>
-                    <th class="text-left p-3 px-5">Date</th>
-                    <th class="text-left p-3 px-5">Time</th>
-                    <th class="text-left p-3 px-5">Type</th>
-                    <th></th>
-                </tr>
-                <%= for appointment <- @outdated_appointments do %>
-                  <tr class="border-b hover:bg-orange-100 bg-gray-100" id={"appointment-#{appointment.id}"}>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.doctor.doctor_profile.first_name %> <%= appointment.doctor.doctor_profile.last_name %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.time %></h1>
-                      </td>
-                      <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
-                      </td>
-                  </tr>
-                <% end %>
-            </tbody>
-        </table>
+    <div class="p-4">
+        <%= if @live_action in [:new, :edit] do %>
+        <.modal return_to={Routes.user_appointment_index_path(@socket, :index)}>
+            <.live_component
+            module={PhysioWeb.UserLive.AppointmentLive.FormComponent}
+            id={@appointment.id || :new}
+            title={@page_title}
+            action={@live_action}
+            appointment={@appointment}
+            current_user={@current_user}
+            return_to={Routes.user_appointment_index_path(@socket, :index)}
+            />
+        </.modal>
+        <% end %>
+        <div class="flex justify-between items-center shadow-md w-full h-16 px-4">
+            <h1 class="text-3xl font-semibold">Upcoming Appointments</h1>
+            <span class="shadow w-auto p-2 bg-teal-500 text-white rounded"><%= live_patch "New Appointment", to: Routes.user_appointment_index_path(@socket, :new) %></span>
+        </div>
+        <div class="px-3 py-4 flex justify-center">
+            <table class="w-full text-md bg-white shadow-md rounded mb-4">
+                <tbody>
+                    <tr class="border-b">
+                        <th class="text-left p-3 px-5">Description</th>
+                        <th class="text-left p-3 px-5">Doctor</th>
+                        <th class="text-left p-3 px-5">Date</th>
+                        <th class="text-left p-3 px-5">Time</th>
+                        <th class="text-left p-3 px-5">Type</th>
+                        <th></th>
+                    </tr>
+                    <%= for appointment <- @upcoming_appointments do %>
+                    <tr class="border-b hover:bg-teal-50 bg-gray-100" id={"appointment-#{appointment.id}"}>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.doctor.doctor_profile.first_name %> <%= appointment.doctor.doctor_profile.last_name %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.time %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
+                        </td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-between items-center shadow-md w-full h-16 px-4 rounded">
+            <h1 class="text-3xl">Previous Appointments</h1>
+        </div>
+        <div class="px-3 py-4 flex justify-center">
+            <table class="w-full text-md bg-white shadow-md rounded mb-4">
+                <tbody>
+                    <tr class="border-b">
+                        <th class="text-left p-3 px-5">Description</th>
+                        <th class="text-left p-3 px-5">Doctor</th>
+                        <th class="text-left p-3 px-5">Date</th>
+                        <th class="text-left p-3 px-5">Time</th>
+                        <th class="text-left p-3 px-5">Type</th>
+                        <th></th>
+                    </tr>
+                    <%= for appointment <- @outdated_appointments do %>
+                    <tr class="border-b hover:bg-teal-50 bg-gray-100" id={"appointment-#{appointment.id}"}>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.doctor.doctor_profile.first_name %> <%= appointment.doctor.doctor_profile.last_name %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.time %></h1>
+                        </td>
+                        <td class="p-3 px-5">
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
+                        </td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

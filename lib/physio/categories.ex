@@ -306,7 +306,7 @@ defmodule Physio.Categories do
       where: dc.doctor_id == ^doctor_id,
       join: c in Category, on: dc.category_id == c.id,
       join: sc in SubCategory, on: dc.sub_category_id == sc.id,
-      select: {dc.id, c.name, sc.name}
+      select: %{doctor_category: dc, category: c, sub_category: sc}
     )
     |> Repo.all()
   end
