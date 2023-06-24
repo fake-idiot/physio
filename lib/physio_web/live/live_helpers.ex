@@ -6,6 +6,7 @@ defmodule PhysioWeb.LiveHelpers do
   alias Physio.Accounts
   alias Physio.Accounts.User
   alias Physio.Accounts.Doctor
+  alias Physio.Accounts.Admin
   alias PhysioWeb.Router.Helpers, as: Routes
 
   @doc """
@@ -60,6 +61,12 @@ defmodule PhysioWeb.LiveHelpers do
     js
     |> JS.hide(to: "#modal", transition: "fade-out")
     |> JS.hide(to: "#modal-content", transition: "fade-out-scale")
+  end
+
+  def find_current_admin(session) do
+    with admin_token when not is_nil(admin_token) <- session["admin_token"],
+         %Admin{} = admin <- Accounts.get_admin_by_session_token(admin_token),
+         do: admin
   end
 
   def find_current_user(session) do

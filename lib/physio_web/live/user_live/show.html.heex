@@ -1,0 +1,111 @@
+<div class="shadow-md mt-14">
+
+    <%= if @open_prescription_modal? do %>
+        <.modal return_to={Routes.user_show_path(@socket, :show, @user.id)}>
+            <.live_component
+            module={PhysioWeb.DoctorLive.PrescriptionLive.FormComponent}
+            id={@prescription.id}
+            title={@page_title}
+            action={@live_action}
+            prescription={@prescription}
+            appointment={@appointment}
+            user={@user}
+            current_doctor={@current_doctor}
+            return_to={Routes.user_show_path(@socket, :show, @user.id)}
+            />
+        </.modal>
+    <% end %>
+
+    <div class="bg-white shadow-md rounded-lg p-14 flex" phx-hook="BackHistory" id="back_history">
+        <div class="w-full pr-8">
+            <div class="mb-6">
+                <button id="back_history_button" class="text-md text-teal-500 italic hover:underline hover:text-teal-600 font-medium mb-6" >&#x2190; Back</button>
+                <%= if @user.user_profile.profile_img do %>
+                <img src={@user.user_profile.profile_img} alt="user Profile Picture" class="w-24 h-24 rounded-lg">
+                <% else %>
+                <img src={Routes.static_path(@socket, "/images/default_user.png")} alt="user Profile Picture" class="w-24 h-24 rounded-lg">
+                <% end %>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold mb-2"><%= @user.user_profile.first_name %> <%= @user.user_profile.last_name %></h2>
+                <p class="text-gray-600">
+                <span class="font-bold text-lg">
+                    Gender:
+                </span> 
+                <span class="text-sm text-gray-500">
+                    <%= if @user.user_profile.gender do %>
+                    <%= @user.user_profile.gender %>
+                    <% else %>
+                    Undefined
+                    <% end %>
+                </span>
+                </p>
+                <p class="text-gray-600">
+                <span class="font-bold text-lg">
+                    Current Address:
+                </span> 
+                <span class="text-sm text-gray-500">
+                    <%= if @user.user_profile.current_address do %>
+                    <%= @user.user_profile.current_address %>
+                    <% else %>
+                    Undefined
+                    <% end %>
+                </span>
+                </p>
+                <p class="text-gray-600">
+                <span class="font-bold text-lg">
+                    Permanent Address:
+                </span> 
+                <span class="text-sm text-gray-500">
+                    <%= if @user.user_profile.permanant_address do %>
+                    <%= @user.user_profile.permanant_address %>
+                    <% else %>
+                    Undefined
+                    <% end %>
+                </span>
+                </p>
+            </div>
+
+            <div class="flex justify-between">
+                <h1 class="text-3xl">Appointments</h1>
+            </div>
+            <div class="flex justify-center">
+                <table class="w-full text-md bg-white shadow-md rounded mb-4">
+                    <tbody>
+                        <tr class="border-b">
+                            <th class="text-left p-3 px-5">Description</th>
+                            <th class="text-left p-3 px-5">Doctor Name</th>
+                            <th class="text-left p-3 px-5">Date</th>
+                            <th class="text-left p-3 px-5">Time</th>
+                            <th></th>
+                        </tr>
+                        <%= for user_appointment <- @user_appointments do %>
+                        <tr class="border-b hover:bg-teal-100 bg-gray-100" id={"appointment-#{user_appointment.id}"}>
+                            <td class="p-3 px-5">
+                                <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= user_appointment.description %></h1>
+                            </td>
+                            <td class="p-3 px-5">
+                                <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= user_appointment.doctor.doctor_profile.first_name %> <%= user_appointment.doctor.doctor_profile.last_name %></h1>
+                            </td>
+                            <td class="p-3 px-5">
+                                <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= user_appointment.date %></h1>
+                            </td>
+                            <td class="p-3 px-5">
+                                <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= user_appointment.time %></h1>
+                            </td>
+                            <td class="p-3 px-5">
+                                <div class="flex p-2 w-full justify-center space-x-0">
+                                    <button phx-click="view_prescription" phx-value-appointment_id={user_appointment.id} class="min-w-auto w-40 h-10 bg-red-500 p-2 rounded-l-full rounded-r-full hover:bg-red-500 text-white font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
+                                        View Prescription
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

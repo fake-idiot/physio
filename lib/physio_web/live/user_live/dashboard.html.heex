@@ -1,11 +1,34 @@
 <div class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-white text-black">
     <div class="h-full p-14 mb-10">
+    <%= if @open_prescription_modal? do %>
+        <.modal return_to={Routes.user_dashboard_path(@socket, :dashboard)}>
+            <.live_component
+            module={PhysioWeb.DoctorLive.PrescriptionLive.FormComponent}
+            id={@prescription.id || :new}
+            title={@page_title}
+            action={@live_action}
+            prescription={@prescription}
+            appointment={@appointment}
+            user={@current_user}
+            current_doctor={@doctor}
+            return_to={Routes.user_dashboard_path(@socket, :dashboard)}
+            />
+        </.modal>
+    <% end %>
 
     <!-- Statistics Cards -->
     <section class="bg-white">
         <div class="mx-auto max-w-screen-xl p-4">
             <div class="mt-8 sm:mt-12">
             <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="flex flex-col rounded-lg bg-blue-100 px-4 py-8 text-center">
+                <dt class="order-last text-lg font-medium text-gray-500">
+                    Today Appointments
+                </dt>
+
+                <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl"><%= Enum.count(@today_appointments) %></dd>
+                </div>
+
                 <div class="flex flex-col rounded-lg bg-blue-100 px-4 py-8 text-center">
                 <dt class="order-last text-lg font-medium text-gray-500">
                     Total Appointments
@@ -21,15 +44,7 @@
                     Total Prescriptions
                 </dt>
 
-                <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl">24</dd>
-                </div>
-
-                <div class="flex flex-col rounded-lg bg-blue-100 px-4 py-8 text-center">
-                <dt class="order-last text-lg font-medium text-gray-500">
-                    Total Spends
-                </dt>
-
-                <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl">86</dd>
+                <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl"><%= Enum.count(@prescriptions) %></dd>
                 </div>
             </dl>
             </div>
@@ -37,14 +52,14 @@
     </section>
     <!-- ./Statistics Cards -->
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 p-4 gap-4">
 
+        <div class="grid grid-cols-1 p-4 gap-4">
             <!-- Social Traffic -->
             <div class="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 w-full shadow-lg rounded">
                 <div class="rounded-t mb-0 px-0 border-0">
                     <div class="flex flex-wrap items-center px-4 py-2">
                     <div class="relative w-full max-w-full flex-grow flex-1">
-                        <h3 class="font-semibold text-base text-gray-900 uppercase">Upcoming Appointments</h3>
+                        <h3 class="font-semibold text-base text-gray-900 uppercase">Today/Upcoming Appointments</h3>
                     </div>
                     <div class="relative w-full max-w-full flex-grow flex-1 text-right">
                         <button phx-click="see_all_appointments" class="text-gray-900 bg-blue-100 text-base font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">See all</button>
@@ -61,13 +76,22 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <%= for {appointment, index} <- Enum.with_index(Enum.take(Enum.sort_by(@upcoming_appointments, &(&1.time), :asc), 3)) do %>
+                            <%= if Enum.empty?(@upcoming_appointments) do %>
                                 <tr class="text-gray-700 my-4 border-b border-gray-400">
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= index + 1 %>.</td>
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left"><%= appointment.doctor.doctor_profile.first_name %></td>
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= appointment.date %></td>
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= appointment.time %></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left"></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">No up coming appointments</td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"></td>
                                 </tr>
+                            <% else %>
+                                <%= for {appointment, index} <- Enum.with_index(Enum.take(Enum.sort_by(@upcoming_appointments, &(&1.time), :asc), 3)) do %>
+                                    <tr class="text-gray-700 my-4 border-b border-gray-400">
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= index + 1 %>.</td>
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left"><%= appointment.doctor.doctor_profile.first_name %></td>
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= appointment.date %></td>
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= appointment.time %></td>
+                                    </tr>
+                                <% end %>
                             <% end %>
                         </tbody>
                     </table>
@@ -75,16 +99,14 @@
                 </div>
             </div>
             <!-- ./Social Traffic -->
+        </div>
 
-            <!-- Recent Activities -->
-            <div class="relative flex flex-col min-w-0 break-words bg-gray-50 w-full shadow-lg rounded">
+        <div class="grid grid-cols-1 p-4 gap-4">
+            <div class="relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 w-full shadow-lg rounded">
                 <div class="rounded-t mb-0 px-0 border-0">
                     <div class="flex flex-wrap items-center px-4 py-2">
                     <div class="relative w-full max-w-full flex-grow flex-1">
                         <h3 class="font-semibold text-base text-gray-900 uppercase">Prescriptions</h3>
-                    </div>
-                    <div class="relative w-full max-w-full flex-grow flex-1 text-right">
-                        <button phx-click="see_all_appointments" class="text-gray-900 bg-blue-100 text-base font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">See all</button>
                     </div>
                     </div>
                     <div class="block w-full overflow-x-auto">
@@ -92,26 +114,43 @@
                         <thead>
                         <tr>
                             <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Sr.</th>
-                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Doctor</th>
-                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Date</th>
-                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Time</th>
+                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Appointment Description</th>
+                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">Doctor Name</th>
+                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">Patient Name</th>
+                            <th class="px-4 bg-gray-100 text-gray-800 align-middle border border-solid border-gray-200 dark:border-gray-500 py-3 text-base border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px"></th>
                         </tr>
                         </thead>
                         <tbody>
-                            <%= for {appointment, index} <- Enum.with_index(Enum.take(Enum.sort_by(@upcoming_appointments, &(&1.time), :asc), 3)) do %>
+                            <%= if Enum.empty?(@prescriptions) do %>
                                 <tr class="text-gray-700 my-4 border-b border-gray-400">
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= index + 1 %>.</td>
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left"><%= appointment.doctor.doctor_profile.first_name %></td>
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= appointment.date %></td>
-                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= appointment.time %></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left"></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4">No up coming appointments</td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"></td>
+                                    <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"></td>
                                 </tr>
+                            <% else %>
+                                <%= for {prescription, index} <- Enum.with_index(Enum.take(@prescriptions, 3)) do %>
+                                    <tr class="text-gray-700 my-4 border-b border-gray-400">
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= index + 1 %>.</td>
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= prescription.appointment.description %></td>
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 text-left"><%= prescription.doctor.doctor_profile.first_name %> <%= prescription.doctor.doctor_profile.last_name %></td>
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4"><%= prescription.user.user_profile.first_name %> <%= prescription.user.user_profile.last_name %></td>    
+                                        <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-base whitespace-nowrap p-4 justify-center">
+                                            <div class="flex p-2 w-full justify-center space-x-0">
+                                                <button phx-click="view_prescription" phx-value-prescription_id={prescription.id} class="min-w-auto w-40 h-10 bg-red-500 p-2 rounded-l-full rounded-r-full hover:bg-red-500 text-white font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
+                                                    View Prescription
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% end %>
                             <% end %>
                         </tbody>
                     </table>
                     </div>
                 </div>
             </div>
-            <!-- ./Recent Activities -->
         </div>
     </div>
 </div>

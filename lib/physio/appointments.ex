@@ -23,6 +23,9 @@ defmodule Physio.Appointments do
     |> Repo.all()
   end
 
+
+  ## Users/Patients ##
+
   def listing_appointments_by_user_id(user_id) do
     (from a in Appointment,
       where: a.user_id == ^user_id,
@@ -32,6 +35,40 @@ defmodule Physio.Appointments do
     |> preload([doctor: [:doctor_profile], user: [:user_profile]])
     |> Repo.all()
   end
+
+  def upcoming_appointments_by_user_id(user_id) do
+    (from a in Appointment,
+      where: a.user_id == ^user_id,
+      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.add(Time.utc_now(), 18000)),
+      order_by: [asc: a.date, asc: a.time],
+      select: a
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
+  def outdated_appointments_by_user_id(user_id) do
+    (from a in Appointment,
+      where: a.user_id == ^user_id,
+      where: a.date < ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time < ^Time.add(Time.utc_now(), 18000)),
+      order_by: [asc: a.date, asc: a.time],
+      select: a
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
+  def today_appointments_by_user_id(user_id) do
+    from(
+      a in Physio.Appointments.Appointment,
+      where: a.user_id == ^user_id,
+      where: a.date == ^Date.utc_today()
+    )
+    |> Repo.all()
+  end
+
+
+  ## Doctor ##
 
   def list_appointments_by_doctor_id(doctor_id) do
     (from a in Appointment,
@@ -43,32 +80,70 @@ defmodule Physio.Appointments do
     |> Repo.all()
   end
 
-  def upcoming_appointments_by_user_id(user_id) do
-    (from a in Appointment,
-      where: a.user_id == ^user_id,
-      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.utc_now()),
-      order_by: [asc: a.date, asc: a.time],
+  def get_upcoming_user_appointment_by_doctor_id(doctor_id) do
+    appointments =
+    from(a in Physio.Appointments.Appointment,
+      where: a.doctor_id == ^doctor_id,
+      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.add(Time.utc_now(), 18000)),
       select: a
     )
-    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+
+    from(u in Physio.Accounts.User,
+      join: a in subquery(appointments),
+      on: u.id == a.user_id,
+      select: u
+    )
+    |> preload(:user_profile)
     |> Repo.all()
   end
 
-  def outdated_appointments_by_user_id(user_id) do
-    (from a in Appointment,
-      where: a.user_id == ^user_id,
-      where: a.date < ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time < ^Time.utc_now()),
-      order_by: [asc: a.date, asc: a.time],
+  def get_new_patients_by_doctor_id(doctor_id) do
+    appointments =
+    from(a in Physio.Appointments.Appointment,
+      where: a.doctor_id == ^doctor_id,
+      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.add(Time.utc_now(), 18000)),
       select: a
     )
-    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+
+    from(u in Physio.Accounts.User,
+      join: a in subquery(appointments),
+      on: u.id == a.user_id,
+      select: u
+    )
+    |> preload(:user_profile)
+    |> Repo.all()
+  end
+
+  def get_patients_by_doctor_id(doctor_id) do
+    appointments =
+    from(a in Physio.Appointments.Appointment,
+      where: a.doctor_id == ^doctor_id,
+      select: a
+    )
+
+    from(u in Physio.Accounts.User,
+      join: a in subquery(appointments),
+      on: u.id == a.user_id,
+      distinct: u.id,
+      select: u
+    )
+    |> preload(:user_profile)
+    |> Repo.all()
+  end
+
+  def get_today_appointments_by_doctor_id(doctor_id) do
+    from(
+      a in Physio.Appointments.Appointment,
+      where: a.doctor_id == ^doctor_id,
+      where: a.date == ^Date.utc_today()
+    )
     |> Repo.all()
   end
 
   def upcoming_appointments_by_doctor_id(doctor_id) do
     (from a in Appointment,
       where: a.doctor_id == ^doctor_id,
-      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.utc_now()),
+      where: a.date > ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time > ^Time.add(Time.utc_now(), 18000)),
       order_by: [asc: a.date, asc: a.time],
       select: a
     )
@@ -79,8 +154,8 @@ defmodule Physio.Appointments do
   def outdated_appointments_by_doctor_id(doctor_id) do
     (from a in Appointment,
       where: a.doctor_id == ^doctor_id,
-      where: a.date < ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time < ^Time.utc_now()),
-      order_by: [asc: a.date, asc: a.time],
+      where: a.date < ^Date.utc_today() or (a.date == ^Date.utc_today() and a.time < ^Time.add(Time.utc_now(), 18000)),
+      order_by: [desc: a.date, asc: a.time],
       select: a
     )
     |> preload([doctor: [:doctor_profile], user: [:user_profile]])
@@ -100,7 +175,7 @@ defmodule Physio.Appointments do
       ** (Ecto.NoResultsError)
 
   """
-  def get_appointment!(id), do: Repo.get!(Appointment, id)
+  def get_appointment!(id), do: Appointment |> preload(:prescription) |> Repo.get!(id)
 
   @doc """
   Creates a appointment.

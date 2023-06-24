@@ -1,4 +1,4 @@
-<div class="p-5 bg-white min-h-screen ">
+<div class="p-5 bg-white mt-14 min-h-screen">
     <%= if @open_category_mpdal? do %>
       <.modal return_to={Routes.doctor_profile_edit_path(@socket, :edit)}>
         <.live_component
@@ -64,7 +64,6 @@
                     <img class="rounded-fullw-36 h-36 items-center border" src={degree}/>
                   <% end %>
                 <% else %>
-                  <% IO.inspect("Here In 2nd") %>
                   <img id="showImage" class="rounded-full w-36 h-36 items-center border" src={Routes.static_path(@socket, "/images/default_user.png")} alt="">
                 <% end %>
               <% end %>
@@ -185,13 +184,13 @@
                       <th class="text-left p-3 px-5">Sub Category</th>
                       <th></th>
                   </tr>
-                  <%= for {doctor_category_id, category_name, sub_category_name} <- @doctor_categories do %>
-                    <tr class="border-b hover:bg-teal-100 bg-gray-100" id={"appointment-#{doctor_category_id}"}>
+                  <%= for doctor_category <- @doctor_categories do %>
+                    <tr class="border-b hover:bg-teal-100 bg-gray-100" id={"appointment-#{doctor_category.doctor_category.id}"}>
                         <td class="p-3 px-5">
-                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= category_name %></h1>
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= doctor_category.category.name %></h1>
                         </td>
                         <td class="p-3 px-5">
-                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= sub_category_name %></h1>
+                            <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= doctor_category.sub_category.name %></h1>
                         </td>
                     </tr>
                   <% end %>

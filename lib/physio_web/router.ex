@@ -1,6 +1,8 @@
 defmodule PhysioWeb.Router do
   use PhysioWeb, :router
 
+  import PhysioWeb.AdminAuth
+
   import PhysioWeb.DoctorAuth
 
   import PhysioWeb.UserAuth
@@ -12,6 +14,7 @@ defmodule PhysioWeb.Router do
     plug :put_root_layout, {PhysioWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_admin
     plug :fetch_current_doctor
     plug :fetch_current_user
   end
@@ -128,7 +131,9 @@ defmodule PhysioWeb.Router do
     live "/edit_doctor_profile", DoctorLive.Profile.Edit, :edit
 
     live "/doctor_dashboard", DoctorLive.Dashboard, :dashboard
-  live "/doctor_appointments", DoctorLive.DoctorAppointment, :appointment
+    live "/doctor_appointments", DoctorLive.DoctorAppointment, :appointment
+    live "/patients", UserLive.Index, :index
+    live "/pateint/:id/show", UserLive.Show, :show
   end
 
   scope "/", PhysioWeb do
@@ -139,5 +144,42 @@ defmodule PhysioWeb.Router do
     post "/doctors/confirm", DoctorConfirmationController, :create
     get "/doctors/confirm/:token", DoctorConfirmationController, :edit
     post "/doctors/confirm/:token", DoctorConfirmationController, :update
+  end
+
+  ## Authentication routes
+
+  scope "/", PhysioWeb do
+    pipe_through [:browser, :redirect_if_admin_is_authenticated]
+
+    get "/admins/register", AdminRegistrationController, :new
+    post "/admins/register", AdminRegistrationController, :create
+    get "/admins/log_in", AdminSessionController, :new
+    post "/admins/log_in", AdminSessionController, :create
+    get "/admins/reset_password", AdminResetPasswordController, :new
+    post "/admins/reset_password", AdminResetPasswordController, :create
+    get "/admins/reset_password/:token", AdminResetPasswordController, :edit
+    put "/admins/reset_password/:token", AdminResetPasswordController, :update
+  end
+
+  scope "/", PhysioWeb do
+    pipe_through [:browser, :require_authenticated_admin]
+
+    get "/admins/settings", AdminSettingsController, :edit
+    put "/admins/settings", AdminSettingsController, :update
+    get "/admins/settings/confirm_email/:token", AdminSettingsController, :confirm_email
+
+    live "/admin_dashbord", AdminLive.Dashboard, :dashboard
+    live "/client_patients", AdminLive.PatientIndex, :index
+    live "/client_docctors", AdminLive.DoctorIndex, :index
+  end
+
+  scope "/", PhysioWeb do
+    pipe_through [:browser]
+
+    delete "/admins/log_out", AdminSessionController, :delete
+    get "/admins/confirm", AdminConfirmationController, :new
+    post "/admins/confirm", AdminConfirmationController, :create
+    get "/admins/confirm/:token", AdminConfirmationController, :edit
+    post "/admins/confirm/:token", AdminConfirmationController, :update
   end
 end

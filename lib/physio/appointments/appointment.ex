@@ -8,6 +8,7 @@ defmodule Physio.Appointments.Appointment do
     field :time, :time
     field :type, :string
 
+    has_one :prescription, Physio.Prescriptions.Prescription
     belongs_to :doctor, Physio.Accounts.Doctor
     belongs_to :user, Physio.Accounts.User
 

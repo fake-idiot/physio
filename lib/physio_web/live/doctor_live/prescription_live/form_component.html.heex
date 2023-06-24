@@ -1,0 +1,69 @@
+<div class="bg-white flex flex-col items-center justify-center">
+  <div class="flex flex-col lg:px-10 py-8 rounded-3xl w-auto">
+    <% show = if assigns.action == :show or assigns.action == :show_pres , do: "pointer-events: none;" %>
+    <div class="font-medium self-center text-xl sm:text-3xl text-gray-900 mb-12">
+      <%= @title %>
+    </div>
+      <.form
+        let={f}
+        for={@changeset}
+        id="appointment-form"
+        phx-target={@myself}
+        phx-change="validate"
+        phx-submit="save"
+      >
+        <div class="flex flex-col mb-5 items-center" style={show}>
+          <%= inputs_for f, :medications, fn md -> %>
+            <div class="form-control flex flex-row items-center mt-3" >
+              <div class="flex flex-col">
+                <%= text_input md, :name, class: "border-1 rounded px-4 py-2 w-100 mr-6 mb-2", placeholder: "Name" %>
+                <%= error_tag(md, :name) %>
+              </div>
+
+              <div class="flex flex-col">
+                <%= number_input md, :dose, class: "border-1 rounded px-4 py-2 mr-6 mb-2", placeholder: "Dose per shift" %>
+                <%= error_tag(md, :dose) %>
+              </div>
+
+              <%= checkbox md, :morning, class: "ml-6 mr-1 w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2" %>
+              <%= label(md, :morning, "Morning") %>
+              
+              <%= checkbox md, :evening, class: "ml-6 mr-1 w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2" %>
+              <%= label(md, :evening, "Evening") %>
+
+              <%= checkbox md, :night, class: "ml-6 mr-1 w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2" %>
+              <%= label(md, :night, "Night") %>
+              <%= if !show do %>
+                <%= if md.index != 0 do %>
+                  <span phx-click="add_more_prescription" phx-target={@myself} phx-value-index={md.index}>
+                     <img class="ml-6 filter brightness-50 h-6 w-6" src={Routes.static_path(@socket, "/images/trash_icon.png")} alt=""/>
+                   </span>
+                <% else %>
+                  <span phx-click="add_more_prescription" phx-target={@myself}>
+                     <img class="ml-6 filter brightness-50 h-6 w-6" src={Routes.static_path(@socket, "/images/add_icon.png")} alt=""/>
+                   </span>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%= hidden_input f, :doctor_id, value: @current_doctor.id %>
+          <%= hidden_input f, :user_id, value: @user.id %>
+          <%= hidden_input f, :appointment_id, value: @appointment.id %>
+          <%= if !show do %>
+            <div class="mt-10 w-[50%]">
+              <button type="submit" phx_disable_with= "Saving..."
+                class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-teal-500 hover:bg-teal-600 rounded-2xl py-2 w-full transition duration-150 ease-in">
+                    <span class="mr-2 uppercase">Submit</span>
+                    <span>
+                        <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </.form>
+  </div>
+</div>

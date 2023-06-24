@@ -32,6 +32,7 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
     changeset = Appointments.change_appointment(appointment)
     doctor_option = doctor_options(assigns)
     disable = if Map.has_key?(assigns, :type), do: "pointer-events: none;"
+    show_modal = if (assigns.action == :show), do: "pointer-events: none;"
 
     {:ok,
      socket
@@ -40,19 +41,16 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
       doctor_option: doctor_option,
       disable: disable,
       already_taken: false,
-      time_list: @time_list
+      time_list: @time_list,
+      show: show_modal,
+      open_prescriptioin_modal: false
      )
     }
   end
 
   @impl true
   def handle_event("validate", %{"appointment" => appointment_params}, socket) do
-    IO.inspect(appointment_params, label: "appointment_params")
-    doctor_appointments = Appointments.upcoming_appointments_by_doctor_id(String.to_integer(appointment_params["doctor_id"]))
-
-    IO.inspect(Enum.empty?(doctor_appointments), label: "Enum.empty?(doctor_appointments)")
-    IO.inspect(appointment_params["date"], label: "appointment_paramsdate")
-    IO.inspect(appointment_params["time"], label: "appointment_paramstime")
+    doctor_appointments = Appointments.list_appointments_by_doctor_id(String.to_integer(appointment_params["doctor_id"]))
 
     if !Enum.empty?(doctor_appointments) and
         appointment_params["date"] != "" and
@@ -80,6 +78,16 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
     else
       save_appointment(socket, socket.assigns.action, appointment_params)
     end
+  end
+
+  @impl true
+  def handle_event("prescriiption", _, socket) do
+    socket =
+      assign(
+        socket,
+        open_prescriptioin_modal: true
+      )
+    {:noreply, socket}
   end
 
   defp save_appointment(socket, :edit, appointment_params) do
@@ -125,7 +133,6 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
     Enum.any?(appointments, fn appointment ->
       appointment.date == input_date
     end)
-    |> IO.inspect(label: "Working1")
   end
 
   def check_appointment_time(appointments, input_time) do

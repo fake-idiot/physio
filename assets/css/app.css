@@ -104,11 +104,33 @@
 }
 
 .kuch_bhi {
-  display: flex; }
+  display: flex; 
+}
 .kuch_bhi .col-lg-1 {
-    width: 4.7%; }
+  width: 4.7%; 
+}
 .kuch_bhi .col-lg-11 {
-    width: 95.3%; }
+  width: 95.3%; 
+}
+
+#snackbar {
+  background-color: #ffffff;
+  color: #000000;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  z-index: 1;
+  font-size: 17px;
+  -webkit-animation: fadein 1s;
+  animation: fadein 1s;
+  position: absolute;
+  left: 50%;
+  top: 70px;
+  transform: translate(-50%);
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
 
 @keyframes fade-in-scale-keys{
   0% { scale: 0.95; opacity: 0; }

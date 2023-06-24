@@ -1,0 +1,71 @@
+<div class="bg-white shadow-md min-h-screen mt-14">
+    <div class="p-4">
+        <div class="flex shadow-md w-full h-16 px-4 items-center">
+            <h1 class="text-3xl font-semibold">Patients</h1>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+            <%= for user <- @patients do %>
+                <div class="flex items-center w-full my-12 justify-center">
+                    <div class="w-full max-w-sm min-w-sm">
+                        <div class="bg-white shadow-xl rounded-lg py-3">
+                            <div class="photo-wrapper p-2">
+                                <%= if !is_nil(user.user_profile.profile_img) do %>
+                                    <img class="w-32 h-32 rounded-full mx-auto" src={user.user_profile.profile_img} alt="user.user_profile.profile_img">
+                                <% else %>
+                                    <img class="w-32 h-32 rounded-full mx-auto" src="https://avatars.githubusercontent.com/u/67946056?v=4" alt="">
+                                <% end %>
+                            </div>
+                            <div class="p-2">
+                                <h3 class="text-center text-xl text-gray-900 font-medium leading-8"><%= user.user_profile.first_name %></h3>
+                                <table class="text-xs my-3">
+                                    <tbody>
+                                    <tr>
+                                        <td class="px-2 py-2 text-gray-500 font-semibold">Current Address</td>
+                                        <td class="px-2 py-2">
+                                            <%= if user.user_profile.current_address do %>
+                                                <%= user.user_profile.current_address %>
+                                            <% else %>
+                                                Undefined
+                                            <% end %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-2 text-gray-500 font-semibold">Phone</td>
+                                        <td class="px-2 py-2">
+                                            <%= if user.user_profile.phone_number do %>
+                                                <%= user.user_profile.phone_number %>
+                                            <% else %>
+                                                Undefined
+                                            <% end %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-2 text-gray-500 font-semibold">Gender</td>
+                                        <td class="px-2 py-2">
+                                            <%= if user.user_profile.gender do %>
+                                                <%= user.user_profile.gender %>
+                                            <% else %>
+                                                Undefined
+                                            <% end %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-2 py-2 text-gray-500 font-semibold">Email</td>
+                                        <td class="px-2 py-2">
+                                            <%= user.email %>
+                                        </td>
+                                    </tr>
+                                </tbody></table>
+
+                                <div class="text-center my-3">
+                                    <button phx-click="patient_detail", phx-value-user_id={user.id} class="text-xs text-teal-500 italic hover:underline hover:text-teal-600 font-medium" >View Profile</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>

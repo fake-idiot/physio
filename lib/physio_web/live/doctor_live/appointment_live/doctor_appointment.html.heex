@@ -1,26 +1,54 @@
-<!-- component -->
-<div class="text-gray-900 bg-white min-h-screen">
+<div class="text-gray-900 bg-white min-h-screen mt-14">
+    <%= if @open_appointment_modal? do %>
+        <.modal return_to={Routes.doctor_doctor_appointment_path(@socket, :appointment)}>
+            <.live_component
+            module={PhysioWeb.DoctorLive.AppointmentLive.FormComponent}
+            id={@appointment.id}
+            title={@page_title}
+            action={@live_action}
+            appointment={@appointment}
+            user={@user}
+            current_doctor={@current_doctor}
+            return_to={Routes.doctor_doctor_appointment_path(@socket, :appointment)}
+            />
+        </.modal>
+    <% end %>
+    <%= if @open_prescription_modal? do %>
+        <.modal return_to={Routes.doctor_doctor_appointment_path(@socket, :appointment)}>
+            <.live_component
+            module={PhysioWeb.DoctorLive.PrescriptionLive.FormComponent}
+            id={@prescription.id || :new}
+            title={@page_title}
+            action={@live_action}
+            prescription={@prescription}
+            appointment={@appointment}
+            user={@user}
+            current_doctor={@current_doctor}
+            return_to={Routes.doctor_doctor_appointment_path(@socket, :appointment)}
+            />
+        </.modal>
+    <% end %>
     <div class="p-4 flex justify-center">
-        <h1 class="text-3xl">Upcoming Appointments</h1>
+        <h1 class="text-3xl">Today/Upcoming Appointments</h1>
     </div>
     <div class="px-3 py-4 flex justify-center">
         <table class="w-full text-md bg-white shadow-md rounded mb-4">
             <tbody>
                 <tr class="border-b">
                     <th class="text-left p-3 px-5">Description</th>
-                    <th class="text-left p-3 px-5">Doctor</th>
+                    <th class="text-left p-3 px-5">Patient</th>
                     <th class="text-left p-3 px-5">Date</th>
                     <th class="text-left p-3 px-5">Time</th>
                     <th class="text-left p-3 px-5">Type</th>
                     <th></th>
                 </tr>
                 <%= for appointment <- @upcoming_appointments do %>
-                  <tr class="border-b hover:bg-orange-100 bg-gray-100" id={"appointment-#{appointment.id}"}>
+                  <tr phx-click="show" phx-value-appointment_id={appointment.id} class="border-b hover:bg-teal-100 bg-gray-100" id={"appointment-#{appointment.id}"}>
                       <td class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
                       </td>
                       <td class="p-3 px-5">
-                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.doctor.doctor_profile.first_name %> <%= appointment.doctor.doctor_profile.last_name %></h1>
+                          <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.user.user_profile.first_name %> <%= appointment.user.user_profile.last_name %></h1>
                       </td>
                       <td class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
@@ -45,28 +73,38 @@
             <tbody>
                 <tr class="border-b">
                     <th class="text-left p-3 px-5">Description</th>
-                    <th class="text-left p-3 px-5">Doctor</th>
+                    <th class="text-left p-3 px-5">Patient</th>
                     <th class="text-left p-3 px-5">Date</th>
                     <th class="text-left p-3 px-5">Time</th>
                     <th class="text-left p-3 px-5">Type</th>
-                    <th></th>
+                    <th class="text-left p-3 px-5"></th>
                 </tr>
                 <%= for appointment <- @outdated_appointments do %>
-                  <tr class="border-b hover:bg-orange-100 bg-gray-100" id={"appointment-#{appointment.id}"}>
-                      <td class="p-3 px-5">
+                  <tr class="border-b bg-gray-100" id={"appointment-#{appointment.id}"}>
+                      <td phx-click="show" phx-value-appointment_id={appointment.id} class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
                       </td>
-                      <td class="p-3 px-5">
+                      <td phx-click="show" phx-value-appointment_id={appointment.id} class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.user.user_profile.first_name %> <%= appointment.user.user_profile.last_name %></h1>
                       </td>
-                      <td class="p-3 px-5">
+                      <td phx-click="show" phx-value-appointment_id={appointment.id} class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.date %></h1>
                       </td>
-                      <td class="p-3 px-5">
+                      <td phx-click="show" phx-value-appointment_id={appointment.id} class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.time %></h1>
                       </td>
-                      <td class="p-3 px-5">
+                      <td phx-click="show" phx-value-appointment_id={appointment.id} class="p-3 px-5">
                           <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
+                      </td>
+                      <td class="p-3 w-[25%]">
+                            <div class="flex bg-gray-100 p-2 w-full justify-center space-x-0">
+                                <button phx-click="add_prescription" phx-value-appointment_id={appointment.id} class="min-w-auto w-40 h-10 bg-green-500 p-2 rounded-l-full hover:bg-green-500  text-white font-semibold  hover:flex-grow transition-all duration-200 ease-in-out">
+                                    Add Prescription
+                                </button>
+                                <button phx-click="view_prescription" phx-value-appointment_id={appointment.id} class="min-w-auto w-40 h-10 bg-red-500 p-2 rounded-r-full hover:bg-red-500 text-white font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
+                                    View Prescription
+                                </button>
+                            </div>
                       </td>
                   </tr>
                 <% end %>

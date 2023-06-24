@@ -10,6 +10,11 @@
         <%= live_component(PhysioWeb.Components.DoctorLeftBar, id: "doctor_left_bar", current_doctor: @current_doctor) %>
       </div>
     <% end %>
+    <%= if Map.has_key?(assigns, :current_admin) and !is_nil(@current_admin) do %>
+      <div class="col-lg-1">
+        <%= live_component(PhysioWeb.Components.AdminLeftBar, id: "admin_header", current_admin: @current_admin) %>
+      </div>
+    <% end %>
     <div class="col-lg-11">
       <%= if Map.has_key?(assigns, :current_user) and !is_nil(@current_user) do %>
         <%= live_component(PhysioWeb.Components.UserHeader, id: "user_header", current_user: @current_user) %>
@@ -17,109 +22,118 @@
       <%= if Map.has_key?(assigns, :current_doctor) and !is_nil(@current_doctor) do %>
         <%= live_component(PhysioWeb.Components.DoctorHeader, id: "doctor_header", current_doctor: @current_doctor) %>
       <% end %>
+      <%= if Map.has_key?(assigns, :current_admin) and !is_nil(@current_admin) do %>
+        <%= live_component(PhysioWeb.Components.AdminHeader, id: "admin_left_bar", current_admin: @current_admin) %>
+      <% end %>
       <%= if live_flash(@flash, :info) do %>
-        <div
-          role="alert"
-          class="rounded-xl border border-gray-100 bg-white p-4 shadow-xl">
-          <div class="flex items-start gap-4">
-            <span class="text-green-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </span>
+        <div class="font-normal text-base leading-6 tracking-tight text-white mt-14">
+          <div
+            id="snackbar"
+            role="alert"
+            class="rounded-xl border border-gray-100 bg-white p-4 shadow-xl">
+            <div class="flex items-start gap-4">
+              <span class="text-green-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </span>
 
-            <div class="flex-1">
-              <strong class="block font-medium text-gray-900"><%= live_flash(@flash, :info) %></strong>
+              <div class="flex-1">
+                <strong class="block font-medium text-gray-900"><%= live_flash(@flash, :info) %></strong>
+              </div>
+
+              <button 
+                phx-click="lv:clear-flash"
+                phx-value-key="info"
+                type="button"
+                class="text-gray-500 transition hover:text-gray-600"
+                data-dismiss-target="#toast-success"
+                aria-label="Close">
+                <span class="sr-only">Dismiss popup</span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
             </div>
-
-            <button 
-              phx-click="lv:clear-flash"
-              phx-value-key="info"
-              type="button"
-              class="text-gray-500 transition hover:text-gray-600"
-              data-dismiss-target="#toast-success"
-              aria-label="Close">
-              <span class="sr-only">Dismiss popup</span>
-
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       <% end %>
       <%= if live_flash(@flash, :error) do %>
-        <div
-          role="alert"
-          class="rounded-xl border border-gray-100 bg-white p-4 shadow-xl">
-          <div class="flex items-start gap-4">
-            <span class="text-green-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </span>
+        <div class="font-normal text-base leading-6 tracking-tight text-white mt-14">
+          <div
+            id="snackbar"
+            role="alert"
+            class="rounded-xl border border-gray-100 bg-white p-4 shadow-xl">
+            <div class="flex items-start gap-4">
+              <span class="text-green-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </span>
 
-            <div class="flex-1">
-              <strong class="block font-medium text-gray-900"><%= live_flash(@flash, :error) %></strong>
+              <div class="flex-1">
+                <strong class="block font-medium text-gray-900"><%= live_flash(@flash, :error) %></strong>
+              </div>
+
+              <button 
+                phx-click="lv:clear-flash"
+                phx-value-key="error"
+                type="button"
+                class="text-gray-500 transition hover:text-gray-600"
+                data-dismiss-target="#toast-error"
+                aria-label="Close">
+                <span class="sr-only">Dismiss popup</span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
             </div>
-
-            <button 
-              phx-click="lv:clear-flash"
-              phx-value-key="error"
-              type="button"
-              class="text-gray-500 transition hover:text-gray-600"
-              data-dismiss-target="#toast-error"
-              aria-label="Close">
-              <span class="sr-only">Dismiss popup</span>
-
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       <% end %>

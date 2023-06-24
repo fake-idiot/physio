@@ -1,7 +1,7 @@
 <div class="text-gray-900 bg-white mt-14">
 
     <div class="p-4">
-        <%= if @live_action in [:new, :edit] do %>
+        <%= if @live_action in [:new, :edit, :show] do %>
         <.modal return_to={Routes.user_appointment_index_path(@socket, :index)}>
             <.live_component
             module={PhysioWeb.UserLive.AppointmentLive.FormComponent}
@@ -14,8 +14,23 @@
             />
         </.modal>
         <% end %>
+        <%= if @open_prescription_modal? do %>
+            <.modal return_to={Routes.user_appointment_index_path(@socket, :index)}>
+                <.live_component
+                module={PhysioWeb.DoctorLive.PrescriptionLive.FormComponent}
+                id={@prescription.id || :new}
+                title={@page_title}
+                action={@live_action}
+                prescription={@prescription}
+                appointment={@appointment}
+                user={@user}
+                current_doctor={@doctor}
+                return_to={Routes.user_appointment_index_path(@socket, :index)}
+                />
+            </.modal>
+        <% end %>
         <div class="flex justify-between items-center shadow-md w-full h-16 px-4">
-            <h1 class="text-3xl font-semibold">Upcoming Appointments</h1>
+            <h1 class="text-3xl font-semibold">Today/Upcoming Appointments</h1>
             <span class="shadow w-auto p-2 bg-teal-500 text-white rounded"><%= live_patch "New Appointment", to: Routes.user_appointment_index_path(@socket, :new) %></span>
         </div>
         <div class="px-3 py-4 flex justify-center">
@@ -30,7 +45,7 @@
                         <th></th>
                     </tr>
                     <%= for appointment <- @upcoming_appointments do %>
-                    <tr class="border-b hover:bg-teal-50 bg-gray-100" id={"appointment-#{appointment.id}"}>
+                    <tr phx-click="show" phx-value-appointment_id={appointment.id} class="border-b hover:bg-teal-50 bg-gray-100 cursor-pointer" id={"appointment-#{appointment.id}"}>
                         <td class="p-3 px-5">
                             <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
                         </td>
@@ -67,7 +82,7 @@
                         <th></th>
                     </tr>
                     <%= for appointment <- @outdated_appointments do %>
-                    <tr class="border-b hover:bg-teal-50 bg-gray-100" id={"appointment-#{appointment.id}"}>
+                    <tr phx-click="show" phx-value-appointment_id={appointment.id} class="border-b hover:bg-teal-50 bg-gray-100" id={"appointment-#{appointment.id}"}>
                         <td class="p-3 px-5">
                             <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.description %></h1>
                         </td>
@@ -82,6 +97,13 @@
                         </td>
                         <td class="p-3 px-5">
                             <h1 class="bg-transparent border-b-2 border-gray-300 py-2"><%= appointment.type %></h1>
+                        </td>
+                        <td class="p-3 w-[25%]">
+                                <div class="flex bg-gray-100 p-2 w-full justify-center space-x-0">
+                                    <button phx-click="view_prescription" phx-value-appointment_id={appointment.id} class="min-w-auto w-40 h-10 bg-red-500 p-2 rounded-full hover:bg-red-500 text-white font-semibold hover:flex-grow transition-all duration-200 ease-in-out">
+                                        View Prescription
+                                    </button>
+                                </div>
                         </td>
                     </tr>
                     <% end %>

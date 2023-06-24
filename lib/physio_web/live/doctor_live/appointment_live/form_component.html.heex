@@ -1,0 +1,59 @@
+<div class="bg-white flex flex-col items-center justify-center">
+  <div class="flex flex-col lg:px-10 py-8 rounded-3xl w-[80%] max-w-md">
+    <div class="font-medium self-center text-xl sm:text-3xl text-gray-900 mb-12">
+      <%= @title %>
+    </div>
+      <.form
+        let={f}
+        for={@changeset}
+        id="appointment-form"
+        phx-target={@myself}
+      >
+        <div class="flex flex-col mb-5">
+          <div class="form-control" style={@show} >
+            <%= text_input f, :description, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Description" %>
+            <%= error_tag(f, :description) %>
+          </div>
+
+          <div class="form-control" style={@show}>
+            <%= date_input f, :date, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Date" %>
+            <%= error_tag(f, :date) %>
+          </div>
+
+          <div class="form-control" style={@show}>
+            <%= select f, :time, @time_list, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
+            <%= error_tag(f, :time) %>
+          </div>
+          <%= if Map.has_key?(assigns, :type) do %>
+            <div class="form-control" style={@show}>
+              <%= select f, :type, @type, class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time", style: @disable %>
+              <%= error_tag(f, :type) %>
+            </div>
+          <% else %>
+            <div class="form-control" style={@show}>
+              <%= select f, :type, ["Physical": "Physical", "Online": "Online"], class: "border-1 rounded px-4 py-2 w-full mb-6", placeholder: "Time" %>
+              <%= error_tag(f, :type) %>
+            </div>
+          <% end %>
+
+          <%= hidden_input f, :doctor_id, value: @current_doctor.id %>
+
+          <%= hidden_input f, :user_id, value: @appointment.user_id %>
+
+          <div class="flex w-full">
+            <%= if @action == :show do %>
+              <button phx-click="add_prescription" phx-value-appointment_id={@appointment.id}
+                class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-teal-500 hover:bg-teal-600 rounded-2xl py-2 w-full transition duration-150 ease-in">
+                    <span class="mr-2 uppercase">Add Prescription</span>
+                    <span>
+                        <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </span>
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </.form>
+  </div>
+</div>
