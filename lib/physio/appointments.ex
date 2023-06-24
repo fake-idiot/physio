@@ -80,6 +80,16 @@ defmodule Physio.Appointments do
     |> Repo.all()
   end
 
+  def available_appointments_by_doctor_id(doctor_id, date, time) do
+    (from a in Appointment,
+      where: a.doctor_id == ^doctor_id,
+      where: a.date == ^date,
+      where: a.time == ^time
+    )
+    |> preload([doctor: [:doctor_profile], user: [:user_profile]])
+    |> Repo.all()
+  end
+
   def get_upcoming_user_appointment_by_doctor_id(doctor_id) do
     appointments =
     from(a in Physio.Appointments.Appointment,

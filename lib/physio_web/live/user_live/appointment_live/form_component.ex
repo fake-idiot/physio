@@ -50,13 +50,10 @@ defmodule PhysioWeb.UserLive.AppointmentLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"appointment" => appointment_params}, socket) do
-    doctor_appointments = Appointments.list_appointments_by_doctor_id(String.to_integer(appointment_params["doctor_id"]))
+    {:ok, input_time} = Time.from_iso8601("#{appointment_params["time"]}:00")
+    doctor_appointments = Appointments.available_appointments_by_doctor_id(appointment_params["doctor_id"], appointment_params["date"], input_time)
 
-    if !Enum.empty?(doctor_appointments) and
-        appointment_params["date"] != "" and
-        check_appointment_date(doctor_appointments, appointment_params["date"]) and
-        appointment_params["time"] != "" and
-        check_appointment_time(doctor_appointments, appointment_params["time"]) do
+    if !Enum.empty?(doctor_appointments) do
         changeset =
           socket.assigns.appointment
           |> Appointments.change_appointment(appointment_params)
